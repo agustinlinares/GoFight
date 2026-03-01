@@ -85,7 +85,7 @@ else{
 }
 const ObtenerEjercicioPorId=async(req,res)=>{
        try{
-           const id=req.params.id;
+           const id=parseInt(req.params.id);
            const ejercicio=await prisma.ejercicios.findUnique({
             where:{id_ejercicio:id},
             select:{

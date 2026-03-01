@@ -110,12 +110,17 @@ const ActualizarRutina=async(req,res)=>{
         }
         else{
              const rutinaActualizada=await prisma.rutinas.update({
+
                 where:{id_rutina:id},
                 data:{
                     nombre_rutina:nombre_rutina,
                     rutinas_ejercicios:{
                           deleteMany:{},//Primero eliminamos los ejercicios que ya tiene la rutina,para luego agregar los nuevos ejercicios,si es que se han proporcionado nuevos ejercicios
-                          create:id_ejercicio?.map(id=>({ejercicios:{connect:{id_ejercicio:id}}}))//Luego agregamos los nuevos ejercicios,si es que se han proporcionado nuevos ejercicios,si no se han proporcionado nuevos ejercicios,entonces no se agregan nuevos ejercicios y la rutina queda sin ejercicios,lo cual no es un problema,ya que el usuario puede agregar ejercicios luego desde la ruta de actualizar rutina,que es esta misma ruta
+                          
+                          create:id_ejercicio?.map(ej=>{
+                            console.log('Ejercicio recibido en ActualizarRutina:', ej); // Agrega este console.log para verificar los ejercicios recibidos
+                            return{duracion_ejercicio:ej.duracion_ejercicio || null,duracion_descanso:ej.duracion_descanso || null,ejercicios:{connect:{id_ejercicio:parseInt(ej.id)}}}
+                          })//Luego agregamos los nuevos ejercicios,si es que se han proporcionado nuevos ejercicios,si no se han proporcionado nuevos ejercicios,entonces no se agregan nuevos ejercicios y la rutina queda sin ejercicios,lo cual no es un problema,ya que el usuario puede agregar ejercicios luego desde la ruta de actualizar rutina,que es esta misma ruta
                     }
 
                 },
