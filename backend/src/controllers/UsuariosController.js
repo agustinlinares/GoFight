@@ -2,6 +2,9 @@
 const prisma=require('../db/db');//Traemos la base de datos,que tenemos definiada en el archivo db.js,que es donde vamos a definir la conexión a la base de datos
 
 const getUsuario=async(req,res)=>{
+    if(!req.user.rol!=='admin'){
+        return res.status(403).json({message:'Acceso denegado,solo los administradores pueden ver a los usuarios'});
+    }
     try{
         const usuarios=await prisma.usuarios.findMany({
         where:{id_usuario:req.user.id_usuario},
@@ -134,4 +137,20 @@ const DeleteUserById=async(req,res)=>{
     }
     }
 }
-module.exports={getUsuario,EliminarUsuario,ActualizarUsuario,EliminarTodosUsuarios,getAllUsuarios,MakeAdmin,DeleteUserById};//Exportamos las funciones de getUsuario,EliminarUsuario y ActualizarUsuario,para poder usarlas en el archivo UsuariosRoutes.js,que es donde vamos a definir las rutas de usuarios
+const VerPerfilUsuario=async(req,res)=>{
+    //Aquó podremos ver el perfil del usuario es decir nombre,email,rol y su imagen de perfil
+    const id_usuario=req.user?.id;
+    try{
+            const perfilUsuario=await prisma.usuarios.findUnique({
+                where:{id_usuario:id_usuario},
+                select:{id_usuario:true,nombre:true,email:true,rol:true,perfil:true}
+             })
+                if(!perfilUsuario){
+                    return res.status(404).json({message:'Usuario no encontrado,compruebe que exista'});
+                }
+                res.status(200).json({message:'Perfil del usuario obtenido exitosamente',perfilUsuario});
+    }catch(error){
+        res.status(500).json({message:'Error al obtener el perfil del usuario',error:error.message});
+    }
+}
+module.exports={getUsuario,EliminarUsuario,ActualizarUsuario,EliminarTodosUsuarios,getAllUsuarios,MakeAdmin,DeleteUserById,VerPerfilUsuario};//Exportamos las funciones de getUsuario,EliminarUsuario y ActualizarUsuario,para poder usarlas en el archivo UsuariosRoutes.js,que es donde vamos a definir las rutas de usuarios

@@ -2,7 +2,7 @@
 
 # 1.Instalar dependencias
 
-con npm install,instalas todas las dependencias necesarias para el backend
+con npm install dentro de /backend,instalas todas las dependencias necesarias para el backend
 
 # 2.Crea la base de datos y el .env
 Crea una base de datos en postgre llamada "GoFigth_DB" y creas el archivo .env,que se encontrará a la raiz de la carpeta /backend,aquí introduciras la url que es DATABASE_URL=postgresql://postgre:<Tu contreña de la base de datos>@localhost:5432/NombreDeLaBD
@@ -37,7 +37,7 @@ Si quieres ver el studio de la base de datos,es con 'npx prisma studio',podras c
   1.Una base de datos en pgadmin
   2.Tener el Insomnia o postman para las pruebas a la base de datos
   3.Deberías tener la API key de Cloudinary para insertar fotos de cualquier formato y videos
- #4.Prisma es como el cerebro de la operación,para generar el cliente y para el ORM
+  4.Prisma es como el cerebro de la operación,para generar el cliente y para el ORM
   5.jsonwebtoken para poder generar tokens a la hora de logearte y permitir una autenticación de usuario
  
 

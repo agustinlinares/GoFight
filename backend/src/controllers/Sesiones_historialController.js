@@ -20,7 +20,13 @@ const RegistrarHistorial=async(req,res)=>{
          }
          else{
               const rutina=await prisma.rutinas.findFirst({
-                where:{id_rutina:parseInt(id_rutina),id_usuario:id_usuario},
+                where:{id_rutina:parseInt(id_rutina),
+                    OR:[
+                        {id_usuario:id_usuario},
+                        {id_usuario:1}//Las rutinas predeterminbadas estaran registradas por el administrador
+                    ]
+                },
+               
                 include:{rutinas_ejercicios:{
                     include:{ejercicios:true}
                 }}
