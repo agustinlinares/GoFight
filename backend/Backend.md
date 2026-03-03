@@ -8,7 +8,7 @@ con npm install dentro de /backend,instalas todas las dependencias necesarias pa
 Crea una base de datos en postgre llamada "GoFigth_DB" y creas el archivo .env,que se encontrará a la raiz de la carpeta /backend,aquí introduciras la url que es DATABASE_URL=postgresql://postgre:<Tu contreña de la base de datos>@localhost:5432/NombreDeLaBD
 
 # 3.Migrar las tablas a la base de datos que has creado
-Después te toca migrar las tablas a tu base de datos,mediante 'npx prisma migrate dev --nombre de la migración' dentro de /backend (En el caso hipotetico de que ya tengas la BD y las tablas simplemente con 'npx prisma generate' es suficiente)
+Después te toca migrar las tablas a tu base de datos,mediante 'npx prisma migrate dev --name init' dentro de /backend (En el caso hipotetico de que ya tengas la BD y las tablas simplemente con 'npx prisma generate' es suficiente)
 
 # 4.generar cliente de prisma
 Una vez que hayas migrado todas las tablas en el /backend,toca generarlas mediante 'npx prisma generate' una vez que ya tengas todas las tablas migradas,felicidades ya podras acceder a la BD y hacer consultas SQL

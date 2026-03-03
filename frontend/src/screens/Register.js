@@ -1,8 +1,12 @@
 import react from 'react';
 import {View,Text,TextInput,TouchableOpacity,StyleSheet,ScrolView, ScrollView,ActivityIndicator} from 'react-native';
-import {Ionicons} from '@expo/vector-icons';
+
 import {useState,useEffect} from 'react';
 import {registerUser} from '../services/services';
+import Button from '../components/Button';
+import TextInputComponent from '../components/TextInput';
+import { Link } from '@react-navigation/native';
+
 //Traemos el servicio para poder registrar el usuario desde el frontend,que es la función que hemos creado en services.js,que se encarga de hacer la petición a la API para registrar el usuario en la base de datos
 
 export default function Register({}){
@@ -12,8 +16,29 @@ export default function Register({}){
             const [password,setPassword]=useState('');
             const [confirmPassword,setConfirmPassword]=useState('');
             const [message,setMessage]=useState('');
+            const [laoding,setLoading]=useState(false);
+
             //Tenemos los hooks necesarios para manejar el esatdo de los campos formularios
            //Antes de empezar con la lógica de los hooks,vamos a poner una pantalla de carga
+           //Vamos a simular una pantalla de carga durante 2-3 segundos
+        //Empezamos metiendo un UseEffect para simular la pantalla de carga
+        useEffect(()=>{
+            setLoading(true);
+            setTimeout(()=>{
+                //Simulamos una carga de 2-3 segundos
+                setLoading(false);
+                //Indicamos que la carga ha termiando,para que se muestre la pantalla de registro
+            },2000);
+        },[]);
+         if(laoding){
+            return(
+                <View style={styles.Container}>
+                    <ActivityIndicator size="large" color="#ff0000"/>
+                </View>
+            )
+
+
+         }
           const handleClick=async()=>{
               if(!nombre || !apellido || !email || !password || !confirmPassword){
                    setMessage('Por favor,complete todos los campos');
@@ -37,36 +62,39 @@ export default function Register({}){
                 <View style={styles.Container}>
                     <ScrollView style={styles.FormStyle}>
                         <View style={styles.ViewStyle}>
-                            <Text style={styles.TitleStyle}>Registro</Text>
+                            <Text style={styles.TitleStyle}>GoFight</Text>
                            
                         </View>
                         <View>
-                            <TextInput style={styles.TextInput} placeholder="Nombre" value={nombre} onChangeText={setNombre}/>
+                            <TextInputComponent placeholder="Nombre" value={nombre} onChangeText={setNombre} iconName="person"/>
                         </View>
                         <View>
-                            <TextInput style={styles.TextInput} placeholder="Apellido" value={apellido} onChangeText={setApellido}/>
+                            <TextInputComponent placeholder="Apellido" value={apellido} onChangeText={setApellido} iconName="person"/>
                         </View>
                         <View>
-                            <TextInput style={styles.TextInput} placeholder="Email" value={email} onChangeText={setEmail}/>
+                            <TextInputComponent placeholder="Email" value={email} onChangeText={setEmail} iconName="mail"/>
                         </View>
                         <View>
-                            <TextInput style={styles.TextInput} placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry={true}/>
+                            <TextInputComponent placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry={true} iconName="lock"/>
                         </View>
                         <View>
-                            <TextInput style={styles.TextInput} placeholder="Confirm Password" value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry={true}/>
+                            <TextInputComponent placeholder="Confirm Password" value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry={true} iconName="lock"/>
                         </View>
                         <View>
-                            <TouchableOpacity style={styles.ButtonStyle} onPress={handleClick}>
-                                <Text style={{color: 'white'}}>Registrar</Text>
-                            </TouchableOpacity>
+                            <Button title="Registrar" onPress={handleClick}/>
+                       
                         </View>
                         <View>
-                            {message ? <Text>{message}</Text> : null}
+                            <Text style={styles.Mensajes}>{message}</Text>
+                            <Text>
+                            <Link to='/login' style={styles.LinkStyle}>¿Ya tienes una cuenta? Inicia sesión</Link>
+                            </Text>
                         </View>
                     </ScrollView>
                 </View>
             )
 }
+
 
 const styles=StyleSheet.create({
     //Vamos a definir los estilos para la pantalla de registro
@@ -75,6 +103,7 @@ const styles=StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         padding:20,
+        
         
       },
       TitleStyle:{
@@ -122,5 +151,15 @@ const styles=StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         borderRadius:5,
+      },
+      Mensajes:{
+        color:'red',
+        marginBottom:10,
+        textAlign:'center',
+      },
+      LinkStyle:{
+        color:'#007bff',
+        textAlign:'center',
+        marginTop:10,
       }
 })

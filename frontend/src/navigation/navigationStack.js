@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';//Es el contenedor 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';//Es el stack de navegación,que nos permite definir las pantallas de navegación,y sus rutas en el frontend
 import Register from '../screens/Register';//importamos la pantalla de registro
 
+
 //Vale ccon eso ya podremos definir el contendor de navegación
 //Vamos a definir las pantallas de navegación
 
@@ -13,6 +14,7 @@ const NavigationStack=()=>{
         <NavigationContainer>
             <Stack.Navigator>
                 <Stack.Screen name='register' component={Register}/>
+        
             </Stack.Navigator>
         </NavigationContainer>
     )
