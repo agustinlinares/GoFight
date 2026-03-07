@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Ahora vamos a crear cada una de las funciones para hacer las peticiones a la API,tendremos que hacer un fecth,para poder conectarse a la API
 //Empezamos por el auth,que es la función de resgistro de usuarios
+//---------------AUTH----------------//
 export const registerUser=async(name,email,password,perfil)=>{
      try{
          const response=await fetch(`${BASE_URL}/auth/registro`,{
@@ -109,4 +110,37 @@ export const getUserProfile=async()=>{
          alert(`Error al obtener el perfil del usuario: ${error.message}`);
          console.error('Error al obtener el perfil del usuario',error);
      }
+}
+//------------Gamificaciones----------------//
+
+//Vamos a implemenatr las gamificaciones,que es una de las carcacteriisticas más importantes de la app
+export const getGamificaciones=async()=>{
+       try{
+            const token=await AsyncStorage.getItem('token');
+            //Recogemos el token del usuario logeado,para poder acceder a las gamificaciones
+             const url= await fetch(`${BASE_URL}/gamificaciones`,{
+                 //Vamos a hacer consultas a la API para obtener las gamificaciones,que es una de las carcaterisiticas
+                  headers:{'Authorization':`Bearer ${token}`}
+             });
+             //Recogeremos todas las gamificaciones,ya sean rachas y puntos ranking
+               const data= await url.json();//Lo pasamos a json para poder usarlo en el frontend
+               if(!url.ok){
+                     throw new Error(data.message || `Error al obtener las gamificaciones ${error.message}`);
+               }
+               
+               
+               return data;
+            
+               
+       }catch(error){
+            throw error;
+       }
+}
+//----------SesionesHistorialo---------//
+export const getSesionesHistorial=async()=>{
+     //Aquí vamos a obtenere todas las sesiones del usuario
+     const token=AsyncStorage.getItem('token');//Obtenemos el token del usuario loegado
+     const url=await fetch(`${BASE_URL}/sesiones_historial`,{
+
+})
 }

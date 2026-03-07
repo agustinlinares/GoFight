@@ -58,6 +58,7 @@ const styles=StyleSheet.create({
       alignItems:'center',
       padding:10,
       gap:10,
+      
   
 
 
@@ -73,7 +74,7 @@ const styles=StyleSheet.create({
               backgroundColor:'#080808',
              
               
-              borderTopColor:'rgba(255,255,255,0.06)'
+              borderTopColor:'rgb(0, 0, 0)'
          
         
            
@@ -110,20 +111,24 @@ const styles=StyleSheet.create({
               fontSize:12,
               color:'white',
               fontWeight:'bold',
-              textShadowColor:'black',
+              textShadowColor:'rgba(255, 255, 255, 0.5)',
               textShadowOffset:{width:1,height:1},
+              textShadowRadius:3,
+              textTransform:'uppercase',
+              letterSpacing:1.1,
+              textAlign:'center'
+
+
+
         },
         IconStyle:{
          color:'white',
-          TextShadowColor:'white',
-          TextShadowOffset:{width:1,height:1},
-          TextShadowRadius:3,
+          textShadowColor:'rgba(255, 255, 255, 0.5)',
+          textShadowOffset:{width:1,height:1},
+          textShadowRadius:3,
 
           padding:2,
           borderRadius:3,
-         
-             
-
         }
 })
 export default Footer;
