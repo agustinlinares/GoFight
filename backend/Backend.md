@@ -6,6 +6,7 @@ con npm install dentro de /backend,instalas todas las dependencias necesarias pa
 
 # 2.Crea la base de datos y el .env
 Crea una base de datos en postgre llamada "GoFigth_DB" y creas el archivo .env,que se encontrará a la raiz de la carpeta /backend,aquí introduciras la url que es DATABASE_URL=postgresql://postgre:<Tu contreña de la base de datos>@localhost:5432/NombreDeLaBD
+IMPORTANTE:no subir el .env junto con el proyecto,por temas de privacidad,ya que se incluye la contraseña y nombre de usuario de pgadmin.
 
 # 3.Migrar las tablas a la base de datos que has creado
 Después te toca migrar las tablas a tu base de datos,mediante 'npx prisma migrate dev --name init' dentro de /backend (En el caso hipotetico de que ya tengas la BD y las tablas simplemente con 'npx prisma generate' es suficiente)

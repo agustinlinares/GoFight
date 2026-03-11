@@ -13,7 +13,7 @@ requisitos:
  cd /frontend
  npm install
  # 4.Configurad el sistema de servicios
-  id a la carpeta /services del frontend y cambiad vuestra BASE_URL,que tendrá que estar basada en vustra dirección ip,por ejemplo const BASE_URL='http://TU_DIRECCIÓN_IP:3000/api';
+  id a la carpeta /services del frontend y cambiad vuestra BASE_URL,que tendrá que estar basada en vustra dirección ip,por ejemplo const BASE_URL='http://TU_DIRECCIÓN_IP:3000/api',la url de los servicios de Expo go(BASE_URL) es recomendable ponerlo dentro de un .env  en la la raiz de la carpeta /frontend ,para evitar conflictos entre diferentes direcciones ips y que haya una cohesión de código y por ultimo sería llamar a esa dirección en /services mediante process.env.BASE_URL;
   # 5.Arrancad el frontend 
   cd frontend
   npx expo start --tunnel
