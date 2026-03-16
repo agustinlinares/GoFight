@@ -8,21 +8,28 @@ import Button from '../components/Button';
 import TextInputComponent from '../components/TextInput';
 import Header from '../components/HeaderComponent';
 import Footer from '../components/Footer';
-import { getGamificaciones } from '../services/services';//Obtenemos las gamificaciones y lo probamos en la pantalla de inicio,para ver si se actualizan cada vez que se registre una sesión en el historial,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
+import { getGamificaciones,ActualizarGamificaciones } from '../services/services';//Obtenemos las gamificaciones y lo probamos en la pantalla de inicio,para ver si se actualizan cada vez que se registre una sesión en el historial,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
 import StackContainer from '../components/StackContainer';
+import BarraProgreso from '../components/BarraProgreso';
+import { getTotalCaloriasQuemadas } from '../services/services';
+
 
 
 const Home=()=>{
     //Vamos a implementar la pantalla de inicio,que va a ser básica y muy snecilla
      const [loading,setLoading]=useState(true);
      const [gamificaciones,setGamificaciones]=useState(null);//Traemos las gamificaciones
-
+     const [caloriasQuemadas,setCaloriasQuemadas]=useState(0);
      useEffect(()=>{
         //Aquí vamos a simular la pantalla de carga
         setTimeout(async ()=>{
              setLoading(false);
+             await ActualizarGamificaciones();//Actualizamos las gamificaciones,teniendo en cuenta la fecha actual y la fecha de la ultima sesión,para que se actualicen cada vez que se registre una sesión en el historial,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
              const data=await getGamificaciones();//Obtenemos las gamificaciones mediante un await
                 setGamificaciones(data);
+                const totalCalorias=await getTotalCaloriasQuemadas();
+                setCaloriasQuemadas(totalCalorias);
+
                 //Vamos a simular una carga de 2 segundos,para que se muestre la pantalla de carga,antes de mostrar la pantalla de inicio
              //La función va esperar 2 segundos a que la carga termine
         },2000);
@@ -40,8 +47,9 @@ const Home=()=>{
                      <Header/>
                       <ScrollView>
                           <StackContainer/>
+                              <BarraProgreso caloriasActuales={caloriasQuemadas} caloriasObjetivo={2000}/>
                       </ScrollView>
-                     
+                      
                      <Footer/>
                 </SafeAreaView>
           )

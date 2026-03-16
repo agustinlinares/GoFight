@@ -41,10 +41,23 @@ const ActualizarGamificaciones=async(req,res)=>{
 
 
     }
+    if(ultimaSesion){
+        const fechaUltimaSesion=new Date(ultimaSesion.fecha_entreno);
+        fechaUltimaSesion.setHours(0,0,0,0);//Establecemos la hora a 00:00:00 para comparar solo la fecha
+        if(fechaUltimaSesion.getTime()===hoy.getTime() && gamificaciones.racha_dias>0){
+            //Si el usuario ha entrenado hoy,la racha se mantiene,incluso va incrementando poco a poco
+            return res.status(200).json({
+                message:"Ya has actualizado la racha de hoy,no puedes actaulizarla hasta mañana,pero no te preocupes,que seguro que superas a mi abuela,que se note que eres un/a crack",
+                gamificaciones
+            })
+        }
+    }
+
     //Sin el usuario no tiene gamificaciones,lo creamos con una racha de 0 días y 0 puntos
      let racha_dias=gamificaciones.racha_dias;
         let puntos_ranking=gamificaciones.puntos_ranking;
         let racha_perdida=false;
+        let mensaje='';
         if(!ultimaSesion){
             racha_dias=0;
             racha_perdida=true;
@@ -60,6 +73,7 @@ const ActualizarGamificaciones=async(req,res)=>{
                 mensaje='Dale duro,que seguro que superas a mi abuela,por hoy has restablecido la racha'
                  racha_dias+=1;
                     puntos_ranking+=10;
+                   
 
                 
 
@@ -68,7 +82,7 @@ const ActualizarGamificaciones=async(req,res)=>{
             racha_dias+=1;
             puntos_ranking+=10;
             mensaje=`Muy bien,has mantenido tu racha de ${racha_dias} días consecutivos,que se note que eres un/a crack,mi abuela estaría orgullosa de ti`
-       
+            
         
 }
 else{

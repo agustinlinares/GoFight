@@ -2,6 +2,7 @@
 const BASE_URL=process.env.EXPO_PUBLIC_SERVICES_URL;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 //Ahora vamos a crear cada una de las funciones para hacer las peticiones a la API,tendremos que hacer un fecth,para poder conectarse a la API
 //Empezamos por el auth,que es la función de resgistro de usuarios
 //---------------AUTH----------------//
@@ -185,4 +186,52 @@ export const getRutinas=async()=>{
          throw error;
      }
 
+}
+//-------Vamos a obtener las sesiones del historial,para poder obtener el total de calorias quemadas---//
+export const getTotalCaloriasQuemadas=async()=>{
+    //Primero vamos a obtener el token del usuario logeado,para poder ver el porgreso del usuario
+      const token=await AsyncStorage.getItem('token');
+      try{
+           const url=await fetch(`${BASE_URL}/sesiones_historial/obtener_historial_de_sesiones`,{
+             headers:{'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
+                }
+                
+           })
+           const text=await url.text();
+           console.log("Historial de sesiones obtenidas para calcular las calorías quemadas:",text);
+           const data=JSON.parse(text);
+           if(!url.ok){
+                throw new Error(data.message || `Error al obtener el historial de sesiones para calcular las calorías quemadas ${error.message}`);
+           }
+              const sesiones=data.historial;
+              const totalCaloriasQuemadas=sesiones.reduce((total,sesiones)=>{
+                     return  total+Number(sesiones.calorias);
+              },0);
+               return totalCaloriasQuemadas;
+               
+      }catch(error){
+           throw error;
+      }
+        
+}
+ export const ActualizarGamificaciones=async(req,res)=>{
+    const token=await AsyncStorage.getItem('token');
+    try{
+        const url=await fetch(`${BASE_URL}/gamificaciones`,{
+            method:'PUT',
+            headers:{'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
+            }
+        })
+        const text=await url.text();
+        console.log('Respuesta del servidor al obtener las gamificaciones para actualizar:',text);
+        const data=JSON.parse(text);
+        if(!url.ok){
+             throw new Error(data.message || `Error al obtener las gamificaciones para actualizar ${error.message}`);
+        }
+        return data;
+
+
+}catch(error){
+    throw error;
+}
 }
