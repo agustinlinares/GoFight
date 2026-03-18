@@ -1,18 +1,35 @@
 //Aquí vamos a definir las funciones crud de la base de datos
 const prisma=require('../db/db');//Traemos la base de datos,que tenemos definiada en el archivo db.js,que es donde vamos a definir la conexión a la base de datos
-
+const bcrypt=require('bcrypt');//Traemos bcryptjs,que es una librería que nos permite encriptar las contraseñas de los usuarios,para que no se guarden en texto plano en la base de datos,lo cual es un gran riesgo de seguridad
 
 const ActualizarUsuario=async(req,res)=>{
     //Vamos con la función de actualizar usuarios
     try{
         const id=req.user.id
         const {name,email,password}=req.body;//Recibimos los datos que queremos actualizar desde el cliente
+        if(!name || !email || !password){
+            return res.status(400).json({message:'Todos los campos son obligatorios'});
+        }
+        const UsuarioExistente=await prisma.usuarios.findUnique({
+            where:{id_usuario:id}
+
+        })
+        if(!UsuarioExistente){
+            return res.status(404).json({message:'Usuario no encontrado,compruebe que exista'});
+        }
+        let contraseñaEncriptada=UsuarioExistente.contrasena;//Si el usuario no quiere actualizar su contraseña,entonces mantenemos la contraseña actual,que ya está encriptada
+        if(password){
+           
+           const salt=await bcrypt.genSalt(10);
+           contraseñaEncriptada=await bcrypt.hash(password,salt);
+
+        }
         const ActualizarUsuario=await prisma.usuarios.update({
             where:{id_usuario:id},//Ponemos la condición,es decir buscará al usuario por su id
             data:{
                 nombre:name,
                 email:email,
-                contrasena:password
+                contrasena:contraseñaEncriptada
             }//Actualizamos los datos del usuario,con los datos que recibimos desde el cliente
         })
         res.status(200).json({message:'Usuario actualizado exitosamente',ActualizarUsuario});

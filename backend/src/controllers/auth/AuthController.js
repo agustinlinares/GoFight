@@ -15,6 +15,12 @@ const registro=async(req,res)=>{
         if(!name || !email || !password){
             return res.status(400).json({message:'Por favor,complete todos los campos'});
         }
+        if(!email.includes('@')){
+            return res.status(400).json({message:'Por favor ingrese un correo electrónico valido,tiene que incluir el caracter @'})
+        }
+        if(password.length<6){
+            return res.status(400).json({message:'La contraseña debe tener un mínimo de 6 caracteres'});
+        }
         const nameExists=await prisma.usuarios.findFirst({
             where:{nombre:name}
         })
