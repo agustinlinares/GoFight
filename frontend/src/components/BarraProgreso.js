@@ -45,22 +45,23 @@ const BarraProgreso=({caloriasActuales,caloriasObjetivo})=>{
                    <View>
                         <View style={styles.TextContainer}>
                            <View style={styles.RowStyle}>
-                             <Text style={styles.TextStyle}>Calorias quemadas:{caloriasActuales}</Text>
+                             <Text style={styles.TextStyle}>calorias quemadas:{caloriasActuales}</Text>
                             <Ionicons name="flame" size={20} color="#ffae00" />
                            </View>
                            <View style={styles.RowStyle}>
-                                <Text style={styles.TextStyle}>Objetivo de calorias quemadas:{caloriasObjetivo}</Text>
-                                <MaterialCommunityIcons name="target" size={20} color="#49362c" />
+                                <Text style={styles.TextStyle}>Objetivo:{caloriasObjetivo}</Text>
+                                <MaterialCommunityIcons name="target" size={20} color="#fb0404" />
                            </View>
-                           <View style={styles.RowStyle}>
-                             <Text style={styles.TextStyle}>Progreso:{porcentajeCaloriasQuemadas.toFixed(2)}%</Text>
-                                    <Ionicons name="barbell" size={20} color="#000000" />
-                           </View>
+                          
                         </View>
                         <View style={styles.barraProgresoContainer}>
                               <Animated.View  style={[styles.barraProgreso,{width}]} />
                               
                         </View>
+                         <View style={styles.SubtitleStyleContainer}>
+                             <Text style={styles.SubtitleStyle}>Progreso:{porcentajeCaloriasQuemadas.toFixed(2)}/100%</Text>
+                                    
+                           </View>
                    </View>
                    
             )
@@ -70,8 +71,8 @@ const BarraProgreso=({caloriasActuales,caloriasObjetivo})=>{
 }
 const styles=StyleSheet.create({
     barraProgresoContainer:{
-        width:'100%',
-        height:20,
+        width:'90%',
+        height:7,
         backgroundColor:'#333333',
 
    
@@ -85,11 +86,14 @@ const styles=StyleSheet.create({
         shadowOpacity:0.8,
         shadowRadius:4,
          elevation:5,
+         alignItems:'center',
+            justifyContent:'center',
+            alignSelf:'center',
 
 
     },
         barraProgreso:{
-                height:20,
+                height:7,
                 backgroundColor:'#ff0000',
                 borderRadius:10,
                 marginTop:10,
@@ -97,12 +101,14 @@ const styles=StyleSheet.create({
                 justifyContent:'center',
                 borderColor:'rgba(255,0,0,0.5)',
                 borderWidth:2,
-                shadowColor:'#ff0000',
+                shadowColor:'#fa0000',
                 shadowOffset:{width:0,height:2},
                 shadowOpacity:0.8,
                 shadowRadius:4,
                  elevation:5,
                  marginTop:0,
+                 alignItems:'center',
+                 justifyContent:'center',
 
         
                 
@@ -111,14 +117,12 @@ const styles=StyleSheet.create({
 
         },
         TextStyle:{
-            fontSize:16,
+            fontSize:14,
             fontWeight:'bold',
             color:'#ffffff',
             marginBottom:5,
             letterSpacing:1,
-            textShadowColor:'rgba(255,0,0,0.5)',
-            textShadowOffset:{width:1,height:1},
-            textShadowRadius:2,
+            
             fontFamily:'Helvetica',
          
 
@@ -138,19 +142,42 @@ const styles=StyleSheet.create({
         TextContainer:{
                 alignItems:'center',
                     justifyContent:'center',
-                    borderColor:'rgba(255, 4, 4, 0.8)',
+                    borderColor:'rgba(48, 44, 44, 0.8)',
                     borderWidth:1,
                     padding:10,
                     borderRadius:5,
                     backgroundColor:'#1a1a1a',
                     shadowColor:'rgba(255, 82, 82, 0.5)',
-                    
-        
-                    
+                    shadowOffset:{width:0,height:2},
+                    shadowOpacity:0.8,
+                    shadowRadius:4,
                     elevation:5,
                     width:'90%',
                     alignSelf:'center',
                 
+        },
+        SubtitleStyleContainer:{
+            flexDirection:'row',
+            alignItems:'flex-start',
+            justifyContent:'flex-start',
+           
+           
+            marginTop:5,
+            gap:5,
+            padding:5,
+            width:'90%',
+            alignSelf:'center',
+            borderColor:'rgba(255, 0, 0, 0.5)',
+            borderWidth:1,
+        },
+        SubtitleStyle:{
+            fontSize:8,
+           fontFamily:'Helvetica',
+            color:'#ffffff',
+            letterSpacing:1,
+            fontWeight:'bold',
+
+
         }
 
 })

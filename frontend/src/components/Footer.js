@@ -2,14 +2,16 @@
 import React from 'react';
 import {View,Text,StyleSheet,FlatList, Touchable, TouchableOpacity} from 'react-native';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Footer=()=>{
+      const navigation=useNavigation();
       const sections=[
-            {id:'1',title:'Inicio',icono:'home'},
-            {id:'2',title:'Rutinas',icono:'dumbbell'},
-            {id:'3',title:'Progreso',icono:'chart-line'},
-            {id:'4',title:'Perfil',icono:'account'},
+            {id:'1',title:'Inicio',icono:'home',screen:'home'},
+            {id:'2',title:'Rutinas',icono:'dumbbell',screen:'Rutinas'},
+            {id:'3',title:'Progreso',icono:'chart-line',screen:'Progreso'},
+            {id:'4',title:'Perfil',icono:'account',screen:'Perfil'},
 
       ];
       //Hemosdefinido las secciones,es hora de implementarlas en una FlatList,que es para renderizar listas
@@ -23,7 +25,8 @@ const Footer=()=>{
            alignItems='center'
            justifyContent='center'
            contentContainerStyle={styles.ListStyle}
-
+           
+           
            
           
              
@@ -34,7 +37,8 @@ const Footer=()=>{
            renderItem={({item})=>{
              return (
              <View style={styles.Item}>
-                 <TouchableOpacity style={styles.TouchableOpacity}>
+                 <TouchableOpacity style={styles.TouchableOpacity}
+                 onPress={() => navigation.navigate(item.screen)}>
                   <MaterialCommunityIcons name={item.icono} size={24} style={styles.IconStyle}/>  
 
                  </TouchableOpacity>
