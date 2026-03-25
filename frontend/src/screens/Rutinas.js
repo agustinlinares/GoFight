@@ -3,11 +3,22 @@ import React,{useState,useEffect} from 'react';
 import {View,Text,StyleSheet,ActivityIndicator,SafeAreaView,Platform,StatusBar,FlatList,TextInput} from 'react-native';
 import Header from '../components/HeaderComponent';
 import Footer from '../components/Footer';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getRutinasDisponibles } from '../services/services';
+import Button from '../components/Button';
+import TextInputComponent from '../components/TextInput';
+
 
 const Rutinas=()=>{
+        //Vamos a crear una función para poder encontrar las rutinas por su nombre y dificulatd
+        //También queremos filtrar las rutinas,usamos selectores para obtener las rutinas del estado global,para mostrar la pantalla de carga,antes de mostrar la pantalla de rutinas,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
+        //Una que ya tengamos las rutinas creadas y la función de busqueda implementada,ahora vamos a acceder a una rutina especifica,esa rutina nos mostrara los ejercicios que contiene ,para ir empezzandolos,el usuario tendra que darle al card o al icono patra emepzar rutina
         const [loading,setLoading]=useState(true);
         const [rutinas,setRutinas]=useState([]);
+        const [rutinasfiltradas,setRutinasFiltradas]=useState([]);
+
+        const [searchRutina,setSearchRutina]=useState('');
+        //Vamos a usar un hook de efecto para poder encontrar las rutinas por su nombre y dificulatd,para mostrar la pantalla de carga,antes de mostrar la pantalla de rutinas,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
         useEffect(()=>{
                 setTimeout(async ()=>{
                      try{
@@ -18,6 +29,7 @@ const Rutinas=()=>{
                         //Una vez que hayamos cargado las rutinas,utilizamos una función seteadora
                         if(res && res.rutinas){
                                 setRutinas(res.rutinas);
+                                        setRutinasFiltradas(res.rutinas);
                         }
                         //Imrpimimos las rutinas por consola para verificar que se están obteniendo correctamente,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
                         console.log('Rutinas disponibles:',rutinas);
@@ -28,13 +40,25 @@ const Rutinas=()=>{
                      finally{
                         setLoading(false);
                      }
-                },2000);
+                },1000);
         },[]);
+         const handleSearch=(text)=>{
+                setSearchRutina(text);
+                //Aquí vamos a filtrar las rutinas por su nombre y dificultad,para mostrar la pantalla de carga,antes de mostrar la pantalla de rutinas,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
+                const filtrarRutinas=rutinas.filter(rutina=>{
+                          const nombreMatch=rutina.nombre_rutina.toLowerCase().includes(text.toLowerCase());
+                          const dificultadMatch=rutina.dificultad.toLowerCase().includes(text.toLowerCase());
+                          return nombreMatch || dificultadMatch;
+                });
+                setRutinasFiltradas(filtrarRutinas);
+        };
         if(loading){
                 return( 
                         
                         <View style={styles.ActivityIndicatorStyle}>
+                               
                                 <ActivityIndicator size="large" color="#ff0000"/>
+                       
                         </View>
                 )
 
@@ -43,32 +67,78 @@ const Rutinas=()=>{
                 return(
                         <SafeAreaView style={styles.Container}>
                                 <Header/>
-                                <TextInput
-                                        style={styles.TextInput}
-                                        placeholder="Buscar rutina..."
-                                        placeholderTextColor="#888"
-                                        
+                                <TextInputComponent placeholder="Buscar rutina para..." value={searchRutina} onChangeText={handleSearch} iconName="search"
                                 />
-
+                                
                                  <FlatList
-                                       data={rutinas}
+                                       data={rutinasfiltradas}
                                        contentContainerStyle={styles.flatListContent}
                                        horizontal={false}
                                        showsVerticalScrollIndicator={false}
                                        
                                        justifyContent='center'
-                                      
+                                       
                                        
                                        keyExtractor={item => item.id_rutina.toString()}
                                             renderItem={({item})=>(
-                                                <View style={styles.itemContainer}>
-                                                        <Text style={styles.TextStyle}>{item.nombre_rutina}</Text>
-                                                        <Text style={{color:'#888',marginTop:5}}>{item.dificultad}</Text>
+                                                <View style={styles.itemContainer
                                                         
+                                                }>
+                                                        <Text style={styles.TextStyle}>{item.nombre_rutina}</Text>
+                                                        <Text style={[
+                                                                        item.dificultad === 'Fácil' ? {color:'#00ff00',
+                                                                                borderColor:'#384f38',
+                                                                                borderWidth:2,
+                                                                                borderRadius:10,
+                                                                                paddingHorizontal:5,
+                                                                                paddingVertical:2,
+                                                                                width:'20%',
+                                                                                shadowColor:'#112b11',
+                                                                                shadowOffset:{width:0,height:2},
+                                                                                shadowOpacity:0.5,
+                                                                                shadowRadius:4,
+                                                                                elevation:5,
+                                                                                textAlign:'center',
+                                                                                alignSelf:'flex-start'
+                                                                        } :
+                                                                item.dificultad === 'Intermedio' ? {color:'#ffff00',
+                                                                         borderColor:'#363609',
+                                                                                borderWidth:2,
+                                                                                borderRadius:10,
+                                                                                paddingHorizontal:5,
+                                                                                paddingVertical:2,
+                                                                                width:'30%',
+                                                                                shadowColor:'#363609',
+                                                                                shadowOffset:{width:0,height:2},
+                                                                                shadowOpacity:0.5,
+                                                                                shadowRadius:4,
+                                                                                elevation:5,
+                                                                                textAlign:'center',
+                                                                                alignSelf:'flex-start'
+                                                                } :
+                                                                item.dificultad === 'Avanzado' ? {color:'#ff0000',
+                                                                         borderColor:'#511313',
+                                                                                borderWidth:2,
+                                                                                borderRadius:10,
+                                                                                paddingHorizontal:5,
+                                                                                paddingVertical:2,
+                                                                                width:'30%',
+                                                                                shadowColor:'#4d0d0d',
+                                                                                shadowOffset:{width:0,height:2},
+                                                                                shadowOpacity:0.5,
+                                                                                shadowRadius:4,
+                                                                                elevation:5,
+                                                                                textAlign:'center',
+                                                                                alignSelf:'flex-start'
+                                                                } :
+                                                                {color:'#ffffff'}
+                                                        ]}onChangeText={handleSearch}>{item.dificultad}</Text>
+                                               <Ionicons name="play" size={20} color="#ffffff" style={{position:'absolute',top:10,right:10}}/>
                                                 </View>
                                             )}
-                                 />
-                           
+                                 
+                              />
+
                                 <Footer/>
                         </SafeAreaView>
                 )
@@ -84,11 +154,13 @@ const styles=StyleSheet.create({
         },
         flatListContent: {
         paddingVertical: 2,
-        paddingBottom: 10, // Espacio extra para que el Footer no tape nada
+        // Espacio extra para que el Footer no tape nada
         justifyContent: 'center',
         bottom: 0,
+        paddingTop: 100,
+
        
-        marginTop:170,
+        
         overflow:'scroll'
 
 
@@ -103,11 +175,11 @@ const styles=StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 15,
     overflow: 'hidden',
-
+    borderLeftColor: '#ff0000',
 
     
     borderLeftWidth: 5,
-    borderLeftColor: '#ff0000', 
+
     
    
     shadowColor: '#000',
@@ -119,19 +191,7 @@ const styles=StyleSheet.create({
     elevation: 8,
     alignSelf:'stretch'
 },
-TextInput:{
-        backgroundColor:'#1e1e1e',
-        borderRadius:10,
-        borderColor:'#372f2f',
-        borderWidth:1,
-        color:'#ffffff',
-        paddingHorizontal:15,
-        paddingVertical:10,
-        borderRadius:10,
-        marginHorizontal:20,
-        marginBottom:10,
 
-},
 
         ActivityIndicatorStyle:{
                 flex:1,
@@ -146,6 +206,7 @@ TextInput:{
                 marginTop:20,
                 color:'#ffffff',
 
-        }
+        },
+
 })
 export default Rutinas;
