@@ -5,13 +5,13 @@
 con npm install dentro de /backend,instalas todas las dependencias necesarias para el backend
 
 # 2.Crea la base de datos y el .env
-<<<<<<< HEAD
+
 Crea una base de datos en postgre llamada "GoFight_DB" y creas el archivo .env,que se encontrará a la raiz de la carpeta /backend,aquí introduciras la url que es DATABASE_URL=postgresql://postgre:<Tu contreña de la base de datos>@localhost:5432/NombreDeLaBD
 IMPORTANTE:no subir el .env junto con el proyecto,por temas de privacidad,ya que se incluye la contraseña y nombre de usuario de pgadmin.
-=======
+
 
 Crea una base de datos en postgre llamada "GoFight_DB" y creas el archivo .env,que se encontrará a la raiz de la carpeta /backend,aquí introduciras la url que es DATABASE_URL="postgresql://postgre:<Tu contreña de la base de datos>@localhost:5432/GoFight_DB"
->>>>>>> f410c2aecef2430ac551011c809da287d77cf073
+
 
 # 3.Migrar las tablas a la base de datos que has creado
 
@@ -21,9 +21,10 @@ Después te toca migrar las tablas a tu base de datos,mediante 'npx prisma migra
 
 Una vez que hayas migrado todas las tablas en el /backend,toca generarlas mediante 'npx prisma generate' una vez que ya tengas todas las tablas migradas,felicidades ya podras acceder a la BD y hacer consultas SQL
 
-# 5 Generar el Usuario admin(importante para pruebas)
+# 5 Generar el Usuario admin,ejercicios y rutinas(importante para pruebas)
 
-parctica fundamental:Una vez que lo tengas todo coinectado vete a /backend/src/seeds y dale al comando 'node UserAdmin.js',esto va inicializar el usuario administrador de la BD
+parctica fundamental:Una vez que lo tengas todo coinectado vete a /backend/src/seeds y dale al comando 'node UserAdmin.js',esto va inicializar el usuario administrador de la BD.También se tiene que incialoizar los EjerciciosSeeds,RutinasSeeds,ya que en una BD local 
+no se podrán ver los ejercicios y rutinas creadas en el proyecto.
 
 # 6 Crea el servidor local con node.js
 
