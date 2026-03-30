@@ -1,14 +1,20 @@
 //Vamos a traer los ejercicios de la rutina,cuando el usuario le de a una de las rutinas,podrá ver los ejercicios que contiene esa rutina
-import React, { useEffect,useState } from "react";
-import {View,Text,StyleSheet,SafeAreaView,ActivityIndicator,FlatList} from 'react-native';
+import React, { useEffect,useRef,useState } from "react";
+import {View,Text,StyleSheet,SafeAreaView,ActivityIndicator,FlatList,Platform,StatusBar, TouchableOpacity} from 'react-native';
 import Header from "../components/HeaderComponent";
 import Footer from "../components/Footer";
+import YouTubePlayer from 'react-native-youtube-iframe';
 import { getEjerciciosDeRutina } from "../services/services";
+import Button from "../components/Button";
+import EjercicioCard from "../components/EjercicioCard";
 
 const Ejercicios=({route})=>{
          const { rutinaId } = route.params;
-         const [ejercicios,setEjercicios]=useState([]);
+         const [ejercicios,setEjercicios]=useState([]);//Definimos el edstado de los ehercicios dentro de una array vacia
+         const [tiempo,setTiempo]=useState(0);//Definimos el estado de tiempo de cada de los ejercicios,que después lo pasaremos a un intervalo de tiempo
+        const [ejecutando,setEjecutando]=useState(false);//Definimos el estado de ejecución de cada uno de los ejercicios
          const [loading,setLoading]=useState(true);
+         const ref=useRef(null);//Definimos el estado de la referencia del intervalo de tiempo,que después lo utilizaremos para limpiar el intervalo de tiempo,cuando se detenga la ejecución de cada uno de los ejercicios
          useEffect(()=>{
               const cargarEjercicios=(async()=> {
                 //Creamos la función para obtener cada uno de los ejercxicios p más bien la llamamos
@@ -17,6 +23,8 @@ const Ejercicios=({route})=>{
                  console.log("Ejercicios de la rutina:",ejerciciosRutinaId);
                  //Obtendremos los ejercicios de la rutina,con el id de la rutina,que se lo pasamos como parametro a la función,que se encuentra en services.js
                  setEjercicios(ejerciciosRutinaId);
+                 //Una vez que hayan cargado los ejercicios,los guardamos y ahora toca definir la ejecución de estos
+                
                 
                  //Una vez que tengamos los ejercicios,dejará de cargar
                 }
@@ -33,6 +41,19 @@ const Ejercicios=({route})=>{
 
               
          },[rutinaId])
+         //Ahora definimos elintervalo de tiempo deseado que será de 00:00
+         const formatTiemppo=(tiempo)=>{
+                 const minutos=Math.floor(tiempo/60);
+                        const segundos=tiempo%60;
+                        return `${minutos.toString().padStart(2,'0')}:${segundos.toString().padStart(2,'0')}`;
+                        //Con esto transformamos el intervalo de tiempo
+
+
+         }
+         const getYoutubeId = (url) => {
+  const match = url.match(/[?&]v=([^&]+)/);
+  return match ? match[1] : null;
+};
          
             if(loading){    
                 return(
@@ -52,13 +73,7 @@ const Ejercicios=({route})=>{
                                         contentContainerStyle={styles.flatListContent}
                                         keyExtractor={(item)=>item.id_rutina_ejercicio.toString()}
                                         renderItem={({item})=>(
-                                                <View style={styles.EjercicioCard}>
-                                                       
-                                                        <Text style={styles.EjercicioName}>{item.ejercicios.nombre}</Text>
-                                                        <Text style={styles.EjercicioDescription}>{item.ejercicios.categoria}</Text>
-                                                        <Text style={styles.EjercicioDescription}>{item.duracion_descanso}</Text>
-                                                        <Text style={styles.EjercicioDescription}>{item.duracion_ejercicio}</Text>
-                                                </View> 
+                                                <EjercicioCard item={item} />   
                                         )}
                                 />
                                 <Footer/>
@@ -71,6 +86,8 @@ const styles=StyleSheet.create({
         Container:{
                 flex:1,
                 backgroundColor:'#000000',
+                 paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+
         },
         ActivityIndicatorStyle:{    
                 flex:1,
