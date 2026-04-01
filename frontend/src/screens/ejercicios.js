@@ -8,6 +8,7 @@ import { getEjerciciosDeRutina } from "../services/services";
 import Button from "../components/Button";
 import EjercicioCard from "../components/EjercicioCard";
 
+
 const Ejercicios=({route})=>{
          const { rutinaId } = route.params;
          const [ejercicios,setEjercicios]=useState([]);//Definimos el edstado de los ehercicios dentro de una array vacia
@@ -74,6 +75,7 @@ const Ejercicios=({route})=>{
                                         keyExtractor={(item)=>item.id_rutina_ejercicio.toString()}
                                         renderItem={({item})=>(
                                                 <EjercicioCard item={item} />   
+                                        
                                         )}
                                 />
                                 <Footer/>
