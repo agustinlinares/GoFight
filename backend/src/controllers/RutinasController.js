@@ -78,6 +78,7 @@ const VerRutinas=async(req,res)=>{
                   },
                   select:{
                     id_rutina:true,
+                    id_usuario:true,
                     nombre_rutina:true,
                     dificultad:true,
                     rutinas_ejercicios:{

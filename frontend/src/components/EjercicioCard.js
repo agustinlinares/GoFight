@@ -6,7 +6,7 @@ import Button from './Button';
 import { getEjerciciosDeRutina } from '../services/services';
 import { registrarSesionHistorial } from '../services/services';
 //Vamos con la lógica de registrar la sesión y con la lógica de tiempo_descanso
-
+import {Video} from 'expo-av';
 
 const getYoutubeId=(url)=>{
     //Esta función es para obtener el id del video de youtube para poder mostrar el video en el card sin problema
@@ -15,7 +15,7 @@ const getYoutubeId=(url)=>{
     //Vale en el caso de que el video exista nos lo devolverá,si no existe nos devolverá null
 }
 //Una vez que hayamos obtenido el id del video,lo podemos mostrar en el card sin problema,ya que el componente de youtube player necesita el id del video para mostrarlo correctamente
-const EjercicioCard=({item})=>{
+const EjercicioCard=({item, onCompletado})=>{
         const [tiempo,setTiempo]=useState(item.duracion_ejercicio);//Definimos el estado de tiempo de cada uno de los ejercicios,que después lo pasaremos a un intervalo de tiempo
         const [ejecutando,setEjecutando]=useState(false);
         const [Fase,setFase]=useState('ejercicio');//Definimos el estado de la fase de cada uno de lños ejercicios,que después se utilizará para definir el tiempo de descanso y el tiempo de ejercicio,ya que cada uno de los ejercicios tiene un tiempo de ejercicio y un tiempo de descanso,por lo tanto,es importante definir la fase de cada uno de los ejercicios para poder mostrar el tiempo restante de cada uno de los ejercicios correctamente
@@ -66,6 +66,8 @@ const EjercicioCard=({item})=>{
                                 }
                                 else if(Fase==='descanso'){
                                         setFase('Finalizado el tiempo de descanso')
+                                        onCompletado();
+
                         //En el caso de que el tiempo sea igual a 0 y la fase sea "descanso",pasaremos a la fase de ejercicio,definiremos el tiempo de ejercicio y empezaremos a ejecutar el intervalo de tiempo para mostrar el tiempo restante de cada uno de los ejercicios
                  }
 
@@ -82,7 +84,12 @@ const EjercicioCard=({item})=>{
          //Una vez que hayamos definido el formato de tiempo,lo podemos mostrar en el card sin problema,ya que el formato de tiempo se va a ir actualizando cada segundo,para mostrar el tiempo restante de cada uno de los ejercicios
          return(
                 <View style={styles.card}>
-      <YoutubePlayer height={200} play={false} videoId={getYoutubeId(item.ejercicios.url_video)} />
+      <Video
+         source={{ uri: item.ejercicios.url_video }}
+  style={{ width: '100%', height: 250, borderRadius: 10, marginBottom: 10 }}
+  useNativeControls
+  resizeMode="cover"
+      />
       <Text style={styles.nombre}>{item.ejercicios.nombre}</Text>
       <Text style={[styles.info,{
           //Ahora vamos a definir el color de los bordes de la categorría,dependiendo de que categoría sea
@@ -103,11 +110,14 @@ const EjercicioCard=({item})=>{
      
          {Fase === 'descanso' && tiempo > 0 ? ( 
                 <Text style={styles.CronometroDesanso}>Tiempo de descanso: {formatoTiempo(tiempo)}</Text>
+                
       
          ) : null}
          {Fase === 'Finalizado el tiempo de descanso' ? (               
                 <Text style={styles.message}>¡Tiempo de descanso finalizado! Prepárate para el siguiente ejercicio.</Text>
          ) : null}
+                
+
         
     </View>
          )

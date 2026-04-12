@@ -10,6 +10,8 @@ import EjercicioCard from "../components/EjercicioCard";
 import { registrarSesionHistorial } from "../services/services";
 
 
+
+
 const Ejercicios=({route})=>{
          const { rutinaId } = route.params;
          const [ejercicios,setEjercicios]=useState([]);//Definimos el edstado de los ehercicios dentro de una array vacia
@@ -48,6 +50,7 @@ const Ejercicios=({route})=>{
 
               
          },[rutinaId])
+       
          //Ahora definimos elintervalo de tiempo deseado que será de 00:00
          const formatTiemppo=(tiempo)=>{
                  const minutos=Math.floor(tiempo/60);
@@ -57,7 +60,11 @@ const Ejercicios=({route})=>{
 
 
          }
-       
+         const handleCompletado=()=>{
+                //Definimos la función para manejar el estado de cada uno de los ejercicios,cuando se completen,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
+                setSesionesCompletadas(prev=>prev+1);
+                //Cada vez que se complete un ejercicio,se incrementará el estado de sesiones completadas,que después lo utilizaremos para mostrar el progreso del usuario,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
+         }
          const handleSesiones=async()=>{
                 //Vamos a registrar cada una de las sesiones que se completen
                 try{
@@ -98,11 +105,13 @@ const Ejercicios=({route})=>{
                                         contentContainerStyle={styles.flatListContent}
                                         keyExtractor={(item)=>item.id_rutina_ejercicio.toString()}
                                         renderItem={({item})=>(
-                                                <EjercicioCard item={item} />   
+                                                <EjercicioCard item={item} onCompletado={handleCompletado}/>   
                                         
                                         )}
                                 />
-                                        <Button title="Registrar Sesión" onPress={handleSesiones} />
+                                {sesionesCompletadas===ejercicios.length && ejercicios.length>0 && (
+                                        <Button title="Registrar sesión" onPress={handleSesiones} />
+                                )}
                                 <Footer/>
                         </SafeAreaView>
                 )
