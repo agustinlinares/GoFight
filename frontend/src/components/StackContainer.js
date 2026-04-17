@@ -7,6 +7,7 @@ import { getRutinas } from "../services/services";
 import Button from   "./Button.js";
 import {useState,useEffect} from "react";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { useNavigation } from "@react-navigation/native";
 
 
 //Tenemos todo lo necesario,para crear el contenedor
@@ -16,7 +17,7 @@ const StackContainer=()=>{
          const [laoding,setLoading]=useState(true);//Definimos el estado de carga
          const [sesionesHistorial,setSesionesHistorial]=useState([]);//Traemos el historial de sesiones,para mostrarlo en la pantalla de inicio,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante mostrar el historial de sesiones en la pantalla de inicio,para ver si se actualiza correctamente
          const [rutinas,setRutinas]=useState([]);//Traemos las rutinas,para mostrar el historial de rutinas en la pantalla de inicio
-
+        const navigation = useNavigation();
          useEffect(()=>{
              setLoading(true);
              //Ahora vamos a obtener las gamificaciones,para mostrar la racha y los puntos_ranking
@@ -69,7 +70,7 @@ const StackContainer=()=>{
                                         <FontAwesome name="star" size={24} color="#fee500" style={style.Icon}/>
                                 </View>
                                 <View>
-                                       <Button title="ver ranking" onPress={() => {}}></Button>
+                                       <Button title="ver ranking" onPress={() => navigation.navigate('Ranking')}></Button>
                                 </View>
                                   
                             </View>

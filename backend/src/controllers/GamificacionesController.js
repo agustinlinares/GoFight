@@ -144,4 +144,19 @@ const VerGamificaciones=async(req,res)=>{
           res.status(500).json({message:'Error al obtener las gamificaciones',error:error.message});
       }
 }
-module.exports={ActualizarGamificaciones, VerGamificaciones}
+const getRanking=async(req,res)=>{
+    try{
+        const ranking=await prisma.gamificaciones.findMany({
+            orderBy:{puntos_ranking:'desc'},
+            include:{usuarios:{
+                select:{nombre:true,perfil:true}
+            }
+            }
+        })
+        res.status(200).json({message:'Ranking obtenido exitosamente',ranking});
+
+        }catch(error){
+            res.status(500).json({message:'Error al obtener el ranking',error:error.message});
+    }
+}
+module.exports={ActualizarGamificaciones, VerGamificaciones, getRanking}

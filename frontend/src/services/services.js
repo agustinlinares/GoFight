@@ -421,3 +421,25 @@ export const ActualizarUsuarioAdmin=async(id_usuario,nombre,email,rol)=>{
         throw error;
     }
 }
+//-------Ranking---------//
+//Vamos a obtener el ranking de los usuarios,para que puedan ver su posición en el ranking mundial,este ranking se basará en los puntos que han obtenido los usuarios,que se van acumulando a medida que van haciendo ejercicio,por lo tanto,es importante que cada vez que un usuario haga ejercicio,actualicemos su puntuación en la base de datos,para que el ranking esté actualizado
+export const getRanking=async()=>{
+    try{
+        const token=await AsyncStorage.getItem('token');
+          const res=await fetch(`${BASE_URL}/gamificaciones/ranking`,{
+            headers:{'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
+            }
+        });
+        const text=await res.text();
+        console.log('Respuesta del servidor al obtener el ranking:',text);
+        const data=JSON.parse(text);
+        if(!res.ok){
+            throw new Error(data.message || `Error al obtener el ranking ${error.message}`);
+        }
+        return data.ranking || [];
+        //Esto nos devolverá el ranking de los usuarios,en caso de que no hgaya usuarios,devuelve una array vacia
+
+    }catch(error){
+        throw error;
+    }
+}

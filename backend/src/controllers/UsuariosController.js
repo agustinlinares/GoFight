@@ -162,4 +162,5 @@ const ActualizarUsuarioAdmin=async(req,res)=>{
     }
 }
 
+
 module.exports={ActualizarUsuario,EliminarTodosUsuarios,getAllUsuarios,MakeAdmin,DeleteUserById,VerPerfilUsuario,ActualizarUsuarioAdmin};//Exportamos las funciones de getUsuario,EliminarUsuario y ActualizarUsuario,para poder usarlas en el archivo UsuariosRoutes.js,que es donde vamos a definir las rutas de usuarios
