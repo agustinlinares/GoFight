@@ -443,3 +443,12 @@ export const getRanking=async()=>{
         throw error;
     }
 }
+//------Crear rutinas-----//
+//-----Este ya es el ultimo servicio que vamos a crear y está enfocado en la creación de rutinas por parte del usuario/administrador,ya que el administrador puede crear rutinas para que los usuarios puedan elegirlas,por lo tanto,es importante que esta función esté protegida por el middleware de autenticación y autorización,para que solo el admin pueda acceder a ella
+export const crearRutina=async(nombre,dificultad,ejercicios)=>{
+    try{
+
+    }catch(err){
+        throw err;
+    }
+}

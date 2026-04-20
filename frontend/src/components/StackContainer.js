@@ -3,6 +3,7 @@ import React from "react";
 import {Text,View,StyleSheet} from "react-native";
 import { getGamificaciones } from "../services/services";
 import { getSesionesHistorial } from "../services/services";
+import { getUserProfile } from "../services/services";
 import { getRutinas } from "../services/services";
 import Button from   "./Button.js";
 import {useState,useEffect} from "react";
@@ -25,10 +26,12 @@ const StackContainer=()=>{
                 //Definimos el tiempo de carga,para simular la carga de datos,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante simular la carga de datos,para ver si se actualizan correctamente
                   setLoading(false);
                    try{
-                                const [gamData,sesionesData,rutinasData]=await Promise.all([getGamificaciones(),getSesionesHistorial(),getRutinas()]);
+                                const [gamData,sesionesData,rutinasData,perfilData]=await Promise.all([getGamificaciones(),getSesionesHistorial(),getRutinas(),getUserProfile()]);//Obtenemos las gamificaciones,el historial de sesiones,las rutinas y el perfil del usuario mediante un await,para mostrar la racha y los puntos_ranking,el historial de sesiones y las rutinas en la pantalla de inicio,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante mostrar la racha y los puntos_ranking,el historial de sesiones y las rutinas en la pantalla de inicio,para ver si se actualizan correctamente
+                                const userId=perfilData?.perfilUsuario?.id_usuario; //Obtenemos el ID del usuario del perfil obtenido
                                 setGamificaciones(gamData);
                                 setSesionesHistorial(sesionesData?.historial || []); //Si no hay sesiones,establecemos un array vacío
-                                setRutinas(rutinasData?.rutinas || []); //Si no hay rutinas,establecemos un array vacío
+                                setRutinas(rutinasData?.rutinas?.filter(rutina => rutina.id_usuario === userId) || []); //Si no hay rutinas,establecemos un array vacío
+
                    }catch(error){
                                 console.error("Error al obtener las gamificaciones, el historial de sesiones o las rutinas:",error);
                    }
