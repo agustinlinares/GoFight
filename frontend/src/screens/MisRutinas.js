@@ -6,6 +6,7 @@ import { getUserProfile } from "../services/services";
 import { useState,useEffect } from "react";
 import Button from "../components/Button.js";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 //Una vez que hayamos conseguido todas las importaciones necesarias,procedemos a crear el componente de MisRutinas,que se va a encargar de mostrar todas las rutinas del usuario,para eso vamos a usar el servicio de getRutinas,que se encuentra en services.js,para obtener todas las rutinas del usuario,para eso necesitamos el id del usuario,que lo obtenemos del perfil del usuario,que lo obtenemos mediante el servicio de getUserProfile,que se encuentra en services.js
 const MisRutinas=()=>{
     const [rutinas,setRutinas]=useState([]);//Definimos el estado de las rutinas,que va a ser un array vacío,ya que al principio no tenemos ninguna rutina
@@ -27,19 +28,23 @@ const MisRutinas=()=>{
         fetchRutinas();
     }, []);
     return(
-        <View style={styles.container}> 
+        <SafeAreaView style={styles.container}> 
             <Text style={styles.title}>Mis Rutinas</Text>
             {rutinas.length === 0 ? (
-                <Text style={styles.noRutinas}>No tienes rutinas creadas.</Text>
+                 <View style={styles.MessageContainer}>
+                    <Text style={styles.noRutinas}>No tienes rutinas creadas.</Text>
+                    <Button title="Crear nueva rutina" onPress={() => navigation.navigate('CrearRutina')}></Button>
+                 </View>
             ) : (
                 rutinas.map((rutina) => (
                     <View key={rutina.id_rutina} style={styles.rutinaContainer}>
                         <Text style={styles.rutinaNombre}>{rutina.nombre_rutina}</Text>
                         <Text style={styles.rutinaDificultad}>Dificultad: {rutina.dificultad}</Text>
+                        
                     </View>
                 ))
             )}
-        </View>
+        </SafeAreaView>
     );
 
 }
@@ -47,30 +52,44 @@ const styles=StyleSheet.create({
     container:{
         flex:1,
         padding:20,
-        backgroundColor:'#fff',
+        backgroundColor:'#060606',
     },
     title:{ 
         fontSize:24,
         fontWeight:'bold',
         marginBottom:20,
+        color:'#d30a0a',
+        alignContent:'center',
+         textAlign:'center',
+
+
+    },
+    MessageContainer:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center',
     },
     noRutinas:{
         fontSize:18,
         color:'#888',
+        textAlign:'center',
     },
     rutinaContainer:{
         marginBottom:15,
         padding:15,
-        backgroundColor:'#f0f0f0',
+        backgroundColor:'#1e1b1b',
         borderRadius:10,
     },
     rutinaNombre:{
         fontSize:18,
         fontWeight:'bold',
+        color:'#fff',
     },
     rutinaDificultad:{
         fontSize:16,
-        color:'#555',   
+        color:'#ffffff',   
+        textAlign:'center',
+
     },
 });
 export default MisRutinas;
