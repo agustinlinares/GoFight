@@ -7,14 +7,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {LinearGradient} from 'expo-linear-gradient';
 
 
-const BarraProgreso=({caloriasActuales,caloriasObjetivo})=>{
+const BarraProgreso=({actual,objetivo,unidad})=>{
       //Vamos a crear una barra de progreso para mostrar la evolución del usuario teniendo en cuenta las calorias quemadas,para esto vamos a usar el hook de useRef para crear una animación de la barra de progreso,que se va a actualizar cada vez que se registre una sesión en el historial,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
        
         const [loading,setLoading]=useState(true);
         const progresoAnimado=useRef(new Animated.Value(0));//Creamos una animación de la barra de progreso,que se va a actualizar cada vez que se registre una sesión en el historial,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
         //Tenemos que calcular el procentaje de calorias quemadas,para eso vamos a usar el Math.min,para tener en cuenta un porcentaje que no sobrepase el 100%
         const porcentajeCaloriasQuemadas=
-         caloriasObjetivo>0?Math.min((caloriasActuales/caloriasObjetivo)*100,100):0;
+         objetivo>0?Math.min((actual/objetivo)*100,100):0;
          //Utilizamos un condicional en el caso de que el objetivo sea nulo,para evitar incosistencias
 
         useEffect(()=>{
@@ -31,7 +31,7 @@ const BarraProgreso=({caloriasActuales,caloriasObjetivo})=>{
                         setLoading(false);
                  },1500);
                  return()=>clearTimeout(timer);
-        },[caloriasActuales,porcentajeCaloriasQuemadas]);
+        },[actual,porcentajeCaloriasQuemadas]);
          const width=progresoAnimado.current.interpolate({
               inputRange:[0,100],
               outputRange:['0%','100%'],
@@ -48,11 +48,13 @@ const BarraProgreso=({caloriasActuales,caloriasObjetivo})=>{
                    <View style={styles.Container}>
                         <View style={styles.TextContainer}>
                            <View style={styles.RowStyle}>
-                             <Text style={styles.TextStyle}>calorias quemadas:{caloriasActuales}</Text>
+                             <Text style={styles.TextStyle}>estado actual:{actual}</Text>
+                             <Text style={styles.TextStyle}>{unidad}</Text>
                             <Ionicons name="flame" size={20} color="#ffae00" />
                            </View>
                            <View style={styles.RowStyle}>
-                                <Text style={styles.TextStyle}>Objetivo:{caloriasObjetivo}</Text>
+                                <Text style={styles.TextStyle}>Objetivo:{objetivo}</Text>
+                                <Text style={styles.TextStyle}>{unidad}</Text>
                                 <MaterialCommunityIcons name="target" size={20} color="#fb0404" />
                            </View>
                           
@@ -114,10 +116,10 @@ const styles=StyleSheet.create({
 
         },
         TextStyle:{
-          fontSize: 13,
+          fontSize:8,
   fontWeight: '600',
   color: '#ffffff',
-  letterSpacing: 1.5,
+  letterSpacing: 2,
   textTransform: 'uppercase',
 
 

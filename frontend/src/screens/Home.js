@@ -83,7 +83,7 @@ const Home=()=>{
                      <Header/>
                       <ScrollView>
                           <StackContainer datos={gamificaciones}/>
-                              <BarraProgreso caloriasActuales={caloriasQuemadas} caloriasObjetivo={300}/>
+                              <BarraProgreso actual={caloriasQuemadas} objetivo={300} unidad="kcal"/>
                               {
                                    isAdmin && (
                                         <View style={{marginTop:20,alignItems:'center', flexDirection:'row', justifyContent:'center'}}>

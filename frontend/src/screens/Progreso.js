@@ -9,8 +9,8 @@ import BarraProgreso from '../components/BarraProgreso';
 import { getTotalCaloriasQuemadas, getGamificaciones, getSesionesHistorial } from '../services/services';
  
 // ─── Constantes de objetivos ──────────────────────────────────────────────────
-const CALORIAS_OBJETIVO = 1000;
-const SESIONES_OBJETIVO = 30;
+const CALORIAS_OBJETIVO = 300; // Meta diaria de calorías quemadas
+const SESIONES_OBJETIVO = 10;
  
 // ─── Sub-componente: Stat compacto (ícono + número + etiqueta) ───────────────
 // Se usa en la fila superior para racha y puntos — dato visible de un vistazo
@@ -22,7 +22,7 @@ const StatCompacto = ({ IconComponent, icono, iconoColor, valor, etiqueta }) => 
   </View>
 );
  
-// ─── Pantalla principal ───────────────────────────────────────────────────────
+
 const Progreso = () => {
   const [loading, setLoading] = useState(true);
   const [caloriasQuemadas, setCaloriasQuemadas] = useState(0);
@@ -69,11 +69,9 @@ const Progreso = () => {
         contentContainerStyle={styles.scrollContenido}
         showsVerticalScrollIndicator={false}
       >
-        {/* Título */}
+    
         <Text style={styles.tituloPantalla}>progreso</Text>
- 
-        {/* ── Fila de stats rápidos: racha y puntos ───────────────────────── */}
-        {/* El usuario ve racha y puntos de un vistazo antes de ver las barras */}
+
         <View style={styles.filaSats}>
           <StatCompacto
             IconComponent={Ionicons}
@@ -98,25 +96,23 @@ const Progreso = () => {
           />
         </View>
  
-        {/* ── Sección calorías ─────────────────────────────────────────────── */}
-        {/* BarraProgreso del compañero — ya tiene su propia animación interna */}
+       
         <Text style={styles.seccionTitulo}>calorías hoy</Text>
         <BarraProgreso
-          caloriasActuales={caloriasQuemadas}
-          caloriasObjetivo={CALORIAS_OBJETIVO}
+          actual={caloriasQuemadas}
+          objetivo={CALORIAS_OBJETIVO}
+          unidad="kcal"
+
         />
  
-        {/* ── Sección sesiones ─────────────────────────────────────────────── */}
-        {/* Reutilizamos BarraProgreso pasándole sesiones en lugar de calorías */}
         <Text style={styles.seccionTitulo}>sesiones completadas</Text>
         <BarraProgreso
-          caloriasActuales={totalSesiones}
-          caloriasObjetivo={SESIONES_OBJETIVO}
+          actual={totalSesiones } 
+          objetivo={SESIONES_OBJETIVO}
+          unidad="sesiones"
         />
  
-        {/* ── Resumen textual ──────────────────────────────────────────────── */}
-        {/* Redundancia intencionada: el usuario ya vio los datos arriba,      */}
-        {/* este bloque los confirma en texto plano de un solo vistazo         */}
+       
         <View style={styles.resumen}>
           <Text style={styles.resumenTitulo}>resumen</Text>
           <Text style={styles.resumenLinea}>🔥 {caloriasQuemadas} / {CALORIAS_OBJETIVO} kcal</Text>
