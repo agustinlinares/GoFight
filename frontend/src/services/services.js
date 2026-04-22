@@ -447,7 +447,7 @@ export const getRanking=async()=>{
 export const getSesionesHoy=async()=>{
     try{
         const token=await AsyncStorage.getItem('token');
-        const res=await fetch(`${BASE_URL}/sesiones_historial/obtener_historial_de_sesiones`,{
+        const res=await fetch(`${BASE_URL}/sesiones_historial/obtener_sesiones_de_hoy`,{
             headers:{'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
             }
         });
@@ -458,6 +458,8 @@ export const getSesionesHoy=async()=>{
             throw new Error(data.message || `Error al obtener las sesiones de hoy ${error.message}`);
         }
         return data.sesionesHoy || [];
+        
+        //Esto nos devolverá el total de sesiones que ha completado el usuario hoy,para poder actualizar su puntuación en el ranking
 
     }catch(error){
         throw error;

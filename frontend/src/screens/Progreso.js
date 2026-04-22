@@ -45,19 +45,17 @@ const Progreso = () => {
           
           
         ]);
-       const sesionesArray = Array.isArray(sesionesData) 
-          ? sesionesData 
-          : (sesionesData?.sesionesHoy || sesionesData?.sesiones || []);
+       const cantidadSesiones = Array.isArray(sesionesData) ? sesionesData.length : 0;
 
       setCaloriasQuemadas(calHoy);
       
       setGamificaciones(gamData);
-      setSesiones(sesionesArray);
+      setSesiones(cantidadSesiones);
         setGamificaciones(gamData);
-        setSesiones(sesionesArray || []);
+        setSesiones(cantidadSesiones || 0);
         console.log('Calorías quemadas hoy:', calHoy);
         console.log('Gamificaciones obtenidas:', gamData);
-        console.log('Sesiones de hoy obtenidas:', sesionesArray);
+        console.log('Sesiones de hoy obtenidas:', cantidadSesiones);
       } catch (error) {
         console.error('Error al cargar el progreso:', error);
       } finally {
@@ -76,7 +74,7 @@ const Progreso = () => {
  
   const racha = gamificaciones?.gamificaciones?.racha_dias || 0;
   const puntos = gamificaciones?.gamificaciones?.puntos_ranking || 0;
-  const totalSesiones = sesiones.length;
+  const totalSesiones = sesiones || 0;
  
   return (
     <SafeAreaView style={styles.pantalla}>
@@ -127,7 +125,7 @@ const Progreso = () => {
         <Text style={styles.seccionTitulo}>sesiones completadas</Text>
         <BarraProgreso
         
-          actual={totalSesiones } 
+          actual={totalSesiones} 
           objetivo={SESIONES_OBJETIVO}
           unidad="sesiones"
         />

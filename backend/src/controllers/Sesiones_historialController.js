@@ -128,4 +128,26 @@ const VerSesionesPorId=async(req,res)=>{
            res.status(500).json({message:'Error al obtener las sesiones de entrenamiento',error:error.message})
      }
 }
-module.exports={RegistrarHistorial, MostrarHistorial, VerSesionesPorId}
+const ObtenerSesionesHoy=async(req,res)=>{
+    const id_usuario=req.user?.id;
+    try{
+            const sesionesHoy=await prisma.sesiones_historial.findMany({
+                where:{
+                    id_usuario:id_usuario,
+                    fecha_entreno:{
+                        gte:new Date(new Date().setHours(0,0,0,0)),//Obtenemos las sesiones de entrenamiento que se han registrado desde el inicio del día
+                        lt:new Date(new Date().setHours(23,59,59,999))//Obtenemos las sesiones de entrenamiento que se han registrado hasta el final del día
+                    }
+                }
+            })
+            const totalCaloriasQuemadas=sesionesHoy.reduce((total,sesion)=>{
+                return total + sesion.calorias;//Calculamos el total de calorias quemadas hoy,teniendo en cuenta las sesiones de entrenamiento registradas hoy
+            }
+            ,0)
+                res.status(200).json({message:'Sesiones de entrenamiento de hoy obtenidas exitosamente',sesionesHoy,totalCaloriasQuemadas});
+    }catch(error){
+        res.status(500).json({message:'Error al obtener las sesiones de entrenamiento de hoy',error:error.message});
+    }
+
+}
+module.exports={RegistrarHistorial, MostrarHistorial, VerSesionesPorId, ObtenerSesionesHoy}
