@@ -33,6 +33,20 @@ const ActualizarGamificaciones=async(req,res)=>{
                 }
             }
         })
+     
+        const sesionesHoy=await prisma.sesiones_historial.findMany({
+            where:{
+                id_usuario:req.user?.id,
+                fecha_entreno:{
+                    gte:hoy,
+                    lt: manana
+                }
+            }
+        })
+        //Aquí vamos a poner un filtro,para que solo se muestren las sesiones de hoy,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
+        const totalSesiones=sesionesHoy.length;
+        //Medimos la longitud de las sesiones de hoy,para mostrar el total de sesiones completadas hoy,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
+        console.log('Sesiones registradas hoy:', sesionesHoy);
         const totalCaloriasQuemadas=sumCalorias._sum.calorias || 0;
         //Aquí se calculan total de calorias quemadas hoy
         let gamificaciones=await prisma.gamificaciones.findFirst({
@@ -108,6 +122,10 @@ else{
 if(totalCaloriasQuemadas>=1000){
      puntos_ranking+=20;
      mensaje=`Enhorabuena,has quemado ${totalCaloriasQuemadas} calorías hoy,te has ganado 20 puntos de ranking,que se note que eres un/a crack,mi abuela estaría orgullosa de ti`
+}
+if(sesionesHoy.length>=3){
+     puntos_ranking+=20;
+     mensaje=`Enhorabuena,has completado ${sesionesHoy.length} sesiones hoy,te has ganado 20 puntos de ranking,que se note que eres un/a crack,mi abuela estaría orgullosa de ti`
 }
   //Ahora sí que lo actualizamos en la base de datos,con la nueva racha y puntos de ranking
      

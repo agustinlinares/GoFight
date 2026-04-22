@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/HeaderComponent';
 import Footer from '../components/Footer';
 import BarraProgreso from '../components/BarraProgreso';
-import { getTotalCaloriasQuemadas, getGamificaciones, getSesionesHistorial } from '../services/services';
+import { getTotalCaloriasQuemadas, getGamificaciones, getSesionesHoy,ActualizarGamificaciones} from '../services/services';
  
 // ─── Constantes de objetivos ──────────────────────────────────────────────────
 const CALORIAS_OBJETIVO = 300; // Meta diaria de calorías quemadas
@@ -32,14 +32,32 @@ const Progreso = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const [calorias, gamData, sesionesData] = await Promise.all([
-          getTotalCaloriasQuemadas(),
+        const res=await ActualizarGamificaciones();
+        const calHoy=await  parseInt(res.caloriasQuemadas,10) || 0;
+        const sesionesHoy=await parseInt(res.sesionesHoy,10) || 0;
+        setCaloriasQuemadas(calHoy);
+        setSesiones(sesionesHoy);
+        console.log('Calorías quemadas hoy obtenidas de la respuesta de actualizar gamificaciones:', calHoy);
+        const [ gamData, sesionesData] = await Promise.all([
+     
           getGamificaciones(),
-          getSesionesHistorial(),
+          getSesionesHoy()
+          
+          
         ]);
-        setCaloriasQuemadas(calorias || 0);
+       const sesionesArray = Array.isArray(sesionesData) 
+          ? sesionesData 
+          : (sesionesData?.sesionesHoy || sesionesData?.sesiones || []);
+
+      setCaloriasQuemadas(calHoy);
+      
+      setGamificaciones(gamData);
+      setSesiones(sesionesArray);
         setGamificaciones(gamData);
-        setSesiones(sesionesData?.historial || []);
+        setSesiones(sesionesArray || []);
+        console.log('Calorías quemadas hoy:', calHoy);
+        console.log('Gamificaciones obtenidas:', gamData);
+        console.log('Sesiones de hoy obtenidas:', sesionesArray);
       } catch (error) {
         console.error('Error al cargar el progreso:', error);
       } finally {
@@ -99,6 +117,7 @@ const Progreso = () => {
        
         <Text style={styles.seccionTitulo}>calorías hoy</Text>
         <BarraProgreso
+        
           actual={caloriasQuemadas}
           objetivo={CALORIAS_OBJETIVO}
           unidad="kcal"
@@ -107,6 +126,7 @@ const Progreso = () => {
  
         <Text style={styles.seccionTitulo}>sesiones completadas</Text>
         <BarraProgreso
+        
           actual={totalSesiones } 
           objetivo={SESIONES_OBJETIVO}
           unidad="sesiones"

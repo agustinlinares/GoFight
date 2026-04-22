@@ -443,6 +443,26 @@ export const getRanking=async()=>{
         throw error;
     }
 }
+//Vamos a a traer las sesiones de hoy,para poder obtener el total de sesiones que ha completado el usuario hoy,para poder actualizar su puntuación en el ranking
+export const getSesionesHoy=async()=>{
+    try{
+        const token=await AsyncStorage.getItem('token');
+        const res=await fetch(`${BASE_URL}/sesiones_historial/obtener_historial_de_sesiones`,{
+            headers:{'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
+            }
+        });
+        const text=await res.text();
+        console.log('Respuesta del servidor al obtener las sesiones de hoy:',text);
+        const data=JSON.parse(text);
+        if(!res.ok){
+            throw new Error(data.message || `Error al obtener las sesiones de hoy ${error.message}`);
+        }
+        return data.sesionesHoy || [];
+
+    }catch(error){
+        throw error;
+    }
+}
 //------Crear rutinas-----//
 //-----Este ya es el ultimo servicio que vamos a crear y está enfocado en la creación de rutinas por parte del usuario/administrador,ya que el administrador puede crear rutinas para que los usuarios puedan elegirlas,por lo tanto,es importante que esta función esté protegida por el middleware de autenticación y autorización,para que solo el admin pueda acceder a ella
 export const crearRutina=async(nombre_rutina,ejercicios)=>{
