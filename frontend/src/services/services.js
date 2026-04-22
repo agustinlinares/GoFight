@@ -190,37 +190,35 @@ export const getRutinas=async()=>{
 }
 //-------Vamos a obtener las sesiones del historial,para poder obtener el total de calorias quemadas---
 //---Vamnos a intentar obtener el total de calorias quemadas,para mostrarlo en la barra de progreso
-const Hoy=()=>{
-      const fechaActual=new Date();//Obtenemos la fecha actual
-      fechaActual.setHours(0,0,0,0);
-       fechaActual.toISOString().split('T')[0];
-       return fechaActual;
-}
-export const getTotalCaloriasQuemadas=async()=>{
-    //Primero vamos a obtener el token del usuario logeado,para poder ver el porgreso del usuario
-      const token=await AsyncStorage.getItem('token');
-      try{
-           const url=await fetch(`${BASE_URL}/sesiones_historial/obtener_historial_de_sesiones`,{
-             headers:{'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
-                }
-                
-           })
-           const text=await url.text();
-           console.log("Historial de sesiones obtenidas para calcular las calorías quemadas:",text);
-           const data=JSON.parse(text);
-           if(!url.ok){
-                throw new Error(data.message || `Error al obtener el historial de sesiones para calcular las calorías quemadas ${error.message}`);
-           }
-              const sesiones=data.caloriasQuemadas || 0;
-              console.log('Calorías quemadas obtenidas del historial de sesiones:', sesiones);
-                return sesiones;
-               
-      }catch(error){
-           throw error;
-        
-      }
-        
-}
+export const getTotalCaloriasQuemadas = async () => {
+  const token = await AsyncStorage.getItem('token');
+  try {
+    const res = await fetch(`${BASE_URL}/sesiones_historial/obtener_historial_de_sesiones`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Error al obtener historial');
+    }
+
+    const hoy = new Date();
+    const fechaHoy = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+    console.log('Fecha hoy:', fechaHoy);
+
+    const caloriasHoy = data.historial
+      ?.filter(s => {
+        const fechaSesion = s.fecha_entreno.split('T')[0];
+        console.log('Comparando:', fechaSesion, '===', fechaHoy);
+        return fechaSesion === fechaHoy;
+      })
+      ?.reduce((total, s) => total + parseFloat(s.calorias || 0), 0) || 0;
+
+    console.log('Calorías quemadas hoy:', caloriasHoy);
+    return caloriasHoy;
+  } catch (error) {
+    throw error;
+  }
+};
  export const ActualizarGamificaciones=async(req,res)=>{
     const token=await AsyncStorage.getItem('token');
     try{
@@ -458,7 +456,7 @@ export const getSesionesHoy=async()=>{
             throw new Error(data.message || `Error al obtener las sesiones de hoy ${error.message}`);
         }
         return data.sesionesHoy || [];
-        
+
         //Esto nos devolverá el total de sesiones que ha completado el usuario hoy,para poder actualizar su puntuación en el ranking
 
     }catch(error){

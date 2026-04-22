@@ -16,6 +16,7 @@ import { getTotalCaloriasQuemadas } from '../services/services';
 import { getUserProfile } from '../services/services';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 //Para eso importamos el servicio para obtener usuarios,ya que necsitamos obtener el rol del usuario,que nos tendría que dar acceso a ese panel
 
 
@@ -35,10 +36,11 @@ const Home=()=>{
         setTimeout(async ()=>{
              
               try{
-                 await ActualizarGamificaciones();//Actualizamos las gamificaciones cada vez que se registre una sesión en el historial,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
-                const res=await ActualizarGamificaciones();
+                   
                 const perfil=await getUserProfile();
                 console.log('Perfil del usuario obtenido en Home:', perfil);
+                const res=await getGamificaciones();
+                setGamificaciones(res);
                 const rolUsuario=perfil?.perfilUsuario?.rol=='admin';
                 setIsAdmin(rolUsuario);
                 //El usuario es admin si el rol obtenido del perfil es 'admin',de lo contrario,es false
@@ -47,7 +49,7 @@ const Home=()=>{
                 //Obtenemos el perfil del usuario
 
                 console.log('Respuesta de actualizar gamificaciones:', res);
-                const calHoy=await  parseInt(res.caloriasQuemadas,10) || 0;
+                const calHoy=await  getTotalCaloriasQuemadas();
                      setCaloriasQuemadas(calHoy);
                     console.log('Calorías quemadas hoy obtenidas de la respuesta de actualizar gamificaciones:', calHoy);
                 

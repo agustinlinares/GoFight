@@ -6,7 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/HeaderComponent';
 import Footer from '../components/Footer';
 import BarraProgreso from '../components/BarraProgreso';
-import { getTotalCaloriasQuemadas, getGamificaciones, getSesionesHoy,ActualizarGamificaciones} from '../services/services';
+import { getTotalCaloriasQuemadas, getGamificaciones, getSesionesHoy} from '../services/services';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
  
 // ─── Constantes de objetivos ──────────────────────────────────────────────────
 const CALORIAS_OBJETIVO = 300; // Meta diaria de calorías quemadas
@@ -32,14 +33,15 @@ const Progreso = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const res=await ActualizarGamificaciones();
-        const calHoy=await  parseInt(res.caloriasQuemadas,10) || 0;
+          const res = await getGamificaciones();
+         const calHoy=await  getTotalCaloriasQuemadas();
+         setCaloriasQuemadas(parseInt(calHoy,10) || 0);
         const sesionesHoy=await parseInt(res.sesionesHoy,10) || 0;
         setCaloriasQuemadas(calHoy);
         setSesiones(sesionesHoy);
         console.log('Calorías quemadas hoy obtenidas de la respuesta de actualizar gamificaciones:', calHoy);
         const [ gamData, sesionesData] = await Promise.all([
-     
+         
           getGamificaciones(),
           getSesionesHoy()
           
