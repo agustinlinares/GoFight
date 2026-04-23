@@ -17,13 +17,15 @@ import { getUserProfile } from '../services/services';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { useRef } from 'react';
 //Para eso importamos el servicio para obtener usuarios,ya que necsitamos obtener el rol del usuario,que nos tendría que dar acceso a ese panel
 
 
 
 
 const Home=()=>{
-     let gamificacionesActualizadas=false;//Definimos una variable para controlar si las gamificaciones se han actualizado
+   //Vamnos a usar un useRef para la lógica interna de la actualización de las gamificaciones,ya que no queremos que se ejecute varias veces,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
+    const isUpdateGamificacionesRunning = useRef(false);
     const navigation = useNavigation();
     //Vamos a implementar la pantalla de inicio,que va a ser básica y muy snecilla
      const [loading,setLoading]=useState(true);
@@ -54,6 +56,14 @@ const Home=()=>{
                     setCaloriasQuemadas(calHoy);
                 }
             }
+            else{
+                //En el caso de que no actualize las gamificaciones,entonces llamamos al servicio de obtener gamificaciones,para obtener las gamificaciones del usuario,ya que cada vez que se registre una sesión en el historial,tenemos que actualizar las gamificaciones,por lo tanto,es importante probarlo en la pantalla de inicio,para ver si se actualizan correctamente
+                const gamificacionesObtenidas=await getGamificaciones();
+                    setGamificaciones(gamificacionesObtenidas);
+
+            }
+            isUpdateGamificacionesRunning.current = false; // Reiniciamos el flag después de la actualización
+            //Aquí reinciamos el flag,es decir solo se actualizará una sola vez
 
               }catch(error){
                   console.log('Error al actualizar las gamificaciones:', error);
