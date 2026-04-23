@@ -132,8 +132,10 @@ const ObtenerSesionesHoy=async(req,res)=>{
     const id_usuario=req.user?.id;
     const hoy=new Date()
      hoy.setHours(0,0,0,0);//Obtenemos la fecha de hoy,pero con las horas, minutos y segundos a 0,para poder comparar con las fechas de las sesiones de entrenamiento,teniendo en cuenta que las sesiones de entrenamiento que se han registrado desde el inicio del día hasta el final del día,serán las sesiones de hoy
-    const manana=new Date(hoy);
+    const manana=new Date();
+    manana.setHours(23,59,59,999);//Obtenemos la fecha de mañana,pero con las horas, minutos y segundos a 0,para poder comparar con las fechas de las sesiones de entrenamiento,teniendo en cuenta que las sesiones de entrenamiento que se han registrado desde el inicio del día hasta el final del día,serán las sesiones de hoy
      manana.setDate(manana.getDate()+1);//Obtenemos la fecha de mañana,para poder comparar con las fechas de las sesiones de entrenamiento,teniendo en cuenta que las sesiones de entrenamiento que se han registrado desde el inicio del día hasta el final del día,serán las sesiones de hoy
+
     //Tendran que pasar 24 horas para que se actualicen las sesiones de hoy,ya que si se registran sesiones de entrenamiento a las 23:00,esas sesiones de entrenamiento no se considerarán como sesiones de hoy,ya que el día siguiente ya habrá comenzado,por lo tanto,esas sesiones de entrenamiento se considerarán como sesiones de ayer,pero no como sesiones de hoy
     try{
             const sesionesHoy=await prisma.sesiones_historial.findMany({
@@ -146,6 +148,7 @@ const ObtenerSesionesHoy=async(req,res)=>{
 
                 }
             })
+    
             const totalSesionesHoy=sesionesHoy.length;//Calculamos el total de sesiones de entrenamiento registradas hoy
            
         
