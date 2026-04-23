@@ -34,30 +34,21 @@ const Progreso = () => {
     setTimeout(async () => {
       try {
           const res = await getGamificaciones();
-         const calHoy=await  getTotalCaloriasQuemadas();
-         setCaloriasQuemadas(parseInt(calHoy,10) || 0);
-        const sesionesHoy=await parseInt(res.sesionesHoy,10) || 0;
-        setCaloriasQuemadas(calHoy);
-        setSesiones(sesionesHoy);
-        console.log('Calorías quemadas hoy obtenidas de la respuesta de actualizar gamificaciones:', calHoy);
-        const [ gamData, sesionesData] = await Promise.all([
-         
-          getGamificaciones(),
-          getSesionesHoy()
-          
-          
-        ]);
-       const cantidadSesiones = Array.isArray(sesionesData) ? sesionesData.length : 0;
+          console.log('Respuesta del servidor al obtener las gamificaciones:', res);
+         const  resSesiones= await getSesionesHoy();
+         console.log('Respuesta del servidor al obtener las sesiones de hoy:', resSesiones);
+         const calhoy=await getTotalCaloriasQuemadas();
+         console.log('Respuesta del servidor al obtener las calorías quemadas hoy:', calhoy);
+         const cantidadCaloriasQuemadas = resSesiones.totalSesionesHoy || 0;
+         const calCalculadas=calhoy || 0;
+         setCaloriasQuemadas(calCalculadas);
+         setSesiones(resSesiones.sesionesHoy || 0);
+         setGamificaciones(res);
+         console.log('Cantidad de sesiones de hoy obtenidas de la respuesta:', resSesiones.totalSesionesHoy);
+         console.log('Calorías quemadas hoy obtenidas de la respuesta:', calhoy);
+         console.log('Calorías quemadas hoy calculadas a partir de las sesiones:', calCalculadas);
+         console.log('Calorías quemadas hoy obtenidas de la respuesta de actualizar gamificaciones:', calhoy);
 
-      setCaloriasQuemadas(calHoy);
-      
-      setGamificaciones(gamData);
-      setSesiones(cantidadSesiones);
-        setGamificaciones(gamData);
-        setSesiones(cantidadSesiones || 0);
-        console.log('Calorías quemadas hoy:', calHoy);
-        console.log('Gamificaciones obtenidas:', gamData);
-        console.log('Sesiones de hoy obtenidas:', cantidadSesiones);
       } catch (error) {
         console.error('Error al cargar el progreso:', error);
       } finally {
@@ -110,7 +101,7 @@ const Progreso = () => {
             icono="calendar-check-o"
             iconoColor="#00e676"
             valor={totalSesiones}
-            etiqueta="sesiones"
+            etiqueta="sesiones hoy"
           />
         </View>
  
@@ -124,7 +115,7 @@ const Progreso = () => {
 
         />
  
-        <Text style={styles.seccionTitulo}>sesiones completadas</Text>
+        <Text style={styles.seccionTitulo}>sesiones diarias:</Text>
         <BarraProgreso
         
           actual={totalSesiones} 
@@ -135,10 +126,10 @@ const Progreso = () => {
        
         <View style={styles.resumen}>
           <Text style={styles.resumenTitulo}>resumen</Text>
-          <Text style={styles.resumenLinea}>🔥 {caloriasQuemadas} / {CALORIAS_OBJETIVO} kcal</Text>
-          <Text style={styles.resumenLinea}>⚡ {racha} días de racha</Text>
-          <Text style={styles.resumenLinea}>⭐ {puntos} puntos</Text>
-          <Text style={styles.resumenLinea}>📅 {totalSesiones} / {SESIONES_OBJETIVO} sesiones</Text>
+          <Text style={styles.resumenLinea}>calorias quemadas: {caloriasQuemadas} kcal / {CALORIAS_OBJETIVO} kcal</Text>
+          <Text style={styles.resumenLinea}>racha diaria: {racha}</Text>
+          <Text style={styles.resumenLinea}>puntos: {puntos} puntos</Text>
+          <Text style={styles.resumenLinea}>sesiones diarias: {totalSesiones} / {SESIONES_OBJETIVO}</Text>
         </View>
       </ScrollView>
  

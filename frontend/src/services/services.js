@@ -449,13 +449,16 @@ export const getSesionesHoy=async()=>{
             headers:{'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
             }
         });
-        const text=await res.text();
-        console.log('Respuesta del servidor al obtener las sesiones de hoy:',text);
-        const data=JSON.parse(text);
+        const data=await res.json();
+        console.log('Respuesta del servidor al obtener las sesiones de hoy:',data);
         if(!res.ok){
             throw new Error(data.message || `Error al obtener las sesiones de hoy ${error.message}`);
         }
-        return data.sesionesHoy || [];
+        return {
+            sesionesHoy: data.totalSesionesHoy 
+            
+        }
+        
 
         //Esto nos devolverá el total de sesiones que ha completado el usuario hoy,para poder actualizar su puntuación en el ranking
 
@@ -479,6 +482,7 @@ export const crearRutina=async(nombre_rutina,ejercicios)=>{
         console.log('Respuesta del servidor al crear una rutina:',text);
         const data=JSON.parse(text);
         return data.nuevaRutina || {};
+
         //Esto nos devolverá la información de la rutina que hemos creado,para que el administrador pueda ver que se ha creado correctamente
 
     }catch(err){

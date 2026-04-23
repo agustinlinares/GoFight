@@ -130,21 +130,29 @@ const VerSesionesPorId=async(req,res)=>{
 }
 const ObtenerSesionesHoy=async(req,res)=>{
     const id_usuario=req.user?.id;
+    const hoy=new Date()
+     hoy.setHours(0,0,0,0);//Obtenemos la fecha de hoy,pero con las horas, minutos y segundos a 0,para poder comparar con las fechas de las sesiones de entrenamiento,teniendo en cuenta que las sesiones de entrenamiento que se han registrado desde el inicio del día hasta el final del día,serán las sesiones de hoy
+    const manana=new Date(hoy);
+     manana.setDate(manana.getDate()+1);//Obtenemos la fecha de mañana,para poder comparar con las fechas de las sesiones de entrenamiento,teniendo en cuenta que las sesiones de entrenamiento que se han registrado desde el inicio del día hasta el final del día,serán las sesiones de hoy
+    //Tendran que pasar 24 horas para que se actualicen las sesiones de hoy,ya que si se registran sesiones de entrenamiento a las 23:00,esas sesiones de entrenamiento no se considerarán como sesiones de hoy,ya que el día siguiente ya habrá comenzado,por lo tanto,esas sesiones de entrenamiento se considerarán como sesiones de ayer,pero no como sesiones de hoy
     try{
             const sesionesHoy=await prisma.sesiones_historial.findMany({
                 where:{
                     id_usuario:id_usuario,
                     fecha_entreno:{
-                        gte:new Date(new Date().setHours(0,0,0,0)),//Obtenemos las sesiones de entrenamiento que se han registrado desde el inicio del día
-                        lt:new Date(new Date().setHours(23,59,59,999))//Obtenemos las sesiones de entrenamiento que se han registrado hasta el final del día
+                        gte:new Date(hoy),//Obtenemos las sesiones de entrenamiento que se han registrado desde el inicio del día
+                        lt:new Date(manana)//Obtenemos las sesiones de entrenamiento que se han registrado hasta el final del día
                     }
+
                 }
             })
-            const totalCaloriasQuemadas=sesionesHoy.reduce((total,sesion)=>{
-                return total + sesion.calorias;//Calculamos el total de calorias quemadas hoy,teniendo en cuenta las sesiones de entrenamiento registradas hoy
-            }
-            ,0)
-                res.status(200).json({message:'Sesiones de entrenamiento de hoy obtenidas exitosamente',sesionesHoy,totalCaloriasQuemadas});
+            const totalSesionesHoy=sesionesHoy.length;//Calculamos el total de sesiones de entrenamiento registradas hoy
+           
+        
+                
+                res.status(200).json({message:'Sesiones de entrenamiento de hoy obtenidas exitosamente',totalSesionesHoy
+                });
+
     }catch(error){
         res.status(500).json({message:'Error al obtener las sesiones de entrenamiento de hoy',error:error.message});
     }
