@@ -5,10 +5,11 @@ const prisma=require('../db/db');//Treamos la base de datos,para poder hacer las
 const ActualizarGamificaciones=async(req,res)=>{
     //En vez de crear gamificaciones,solo ls vamos a actualizar,ya que la racha y el ranking son por defecto =0
     //Tenemos que tener el cuenta la fecha actual,ya que la racha se tiene que actualizar cada día
-    const hoy=new Date();
-    const manana=new Date(hoy);
-    manana.setDate(hoy.getDate()+1);//Obtenemos la fecha de mañana sumando un día,esto es para que la app,tenga en cuenta cuantos días estan pasando verdaderamente
+    const hoy=new Date();//Obtenemos la fecha actual,para poder comparar con las fechas de las sesiones de entrenamiento,teniendo en cuenta que las sesiones de entrenamiento que se han registrado desde el inicio del día hasta el final del día,serán las sesiones de hoy
     hoy.setHours(0,0,0,0);//Establecemos la hora a 00:00:00 para comparar solo la fecha
+    const manana=new Date(hoy);
+    manana.setDate(hoy.getDate()+1);//Obtenemos la fecha de mañana,para poder comparar con las fechas de las sesiones de entrenamiento,teniendo en cuenta que las sesiones de entrenamiento que se han registrado desde el inicio del día hasta el final del día,serán las sesiones de hoy
+   
     const ayer=new Date(hoy);
     ayer.setDate(hoy.getDate()-1);//Obtenemos la fecha de ayer restando un día,esto es para que la app,tenga en cuenta cuantos días estan pasando verdaderamente
     //La lógica es simple,si el usuario ha entrenado hoy,la racha se mantiene,incluso va incrementando poco a poco,si no mantiene varios días sin entrenar la tecnica,pues perderá toda esa racha
