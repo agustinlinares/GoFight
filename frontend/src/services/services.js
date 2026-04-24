@@ -182,6 +182,12 @@ export const getRutinas=async()=>{
        if(!url.ok){
             throw new Error(data.message || `Error al obtener las rutinas ${data.message}`);
        }
+       if(data.rutinas && Array.isArray(data.rutinas)){
+            data.rutinas=data.rutinas.map(rutina=>({
+                ...rutina,
+                dificultad:rutina.dificultad==='F_cil' ? 'Fácil' : rutina.dificultad // Asignamos un valor por defecto si dificultad es null
+            }));
+        }
          return data;
      }catch(error){
          throw error;
@@ -481,6 +487,10 @@ export const crearRutina=async(nombre_rutina,ejercicios)=>{
         const text=await res.text();
         console.log('Respuesta del servidor al crear una rutina:',text);
         const data=JSON.parse(text);
+        if(data.rutina && data.rutina.dificultad === 'F_cil'){
+            data.rutina.dificultad = 'Fácil';
+        }
+
         return data.nuevaRutina || {};
 
         //Esto nos devolverá la información de la rutina que hemos creado,para que el administrador pueda ver que se ha creado correctamente
