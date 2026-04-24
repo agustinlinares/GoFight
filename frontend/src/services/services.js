@@ -472,6 +472,23 @@ export const getSesionesHoy=async()=>{
         throw error;
     }
 }
+//Definimos el servicios para obtener todo el catalogo de ejercicios,para que el administrador pueda elegir los ejercicios que quiere incluir en las rutinas,ya que el administrador puede crear rutinas personalizadas para los usuarios,por lo tanto,es importante que esta función esté protegida por el middleware de autenticación y autorización,para que solo el admin pueda acceder a ella
+export const getCatalogoEjercicios=async()=>{
+    try{
+        const token=await AsyncStorage.getItem('token');
+        const res=await fetch(`${BASE_URL}/ejercicios/obtener`,{
+            headers:{'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
+            }
+        });
+        const data=await res.json();
+        if(!res.ok){
+            throw new Error(data.message || `Error al obtener el catálogo de ejercicios ${error.message}`);
+        }
+        return data.ejercicios || [];
+    }catch(error){
+        throw error;
+    }
+}
 //------Crear rutinas-----//
 //-----Este ya es el ultimo servicio que vamos a crear y está enfocado en la creación de rutinas por parte del usuario/administrador,ya que el administrador puede crear rutinas para que los usuarios puedan elegirlas,por lo tanto,es importante que esta función esté protegida por el middleware de autenticación y autorización,para que solo el admin pueda acceder a ella
 export const crearRutina=async(nombre_rutina,ejercicios)=>{
