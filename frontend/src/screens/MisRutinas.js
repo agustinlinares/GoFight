@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, Modal, A
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { getRutinas, getUserProfile, getCatalogoEjercicios, crearRutina } from "../services/services";
+import { getRutinas, getUserProfile, getCatalogoEjercicios, crearRutina,EliminarRutina} from "../services/services";
 import Button from "../components/Button.js";
 
 const MisRutinas = () => {
@@ -22,6 +22,7 @@ const MisRutinas = () => {
             const [rutinasData, ejerciciosData] = await Promise.all([
                 getRutinas(),
                 getCatalogoEjercicios()
+
             ]);
             
             const rutinasUsuario = rutinasData?.rutinas?.filter(r => r.id_usuario === userId) || [];
@@ -72,6 +73,32 @@ const MisRutinas = () => {
             Alert.alert("Error", "No se pudo guardar la rutina en el servidor.");
         }
     };
+    const handleEliminarRutina =(id)=>{
+        Alert.alert(
+            "Confirmar eliminación",
+            "¿Estás seguro de que deseas eliminar esta rutina?",
+            [
+                { text: "Cancelar", style: "cancel" },
+                { text: "Eliminar", style: "destructive", onPress: () => eliminarRutina(id) }
+            ]
+            //
+            //Aquí se muestra una alerta para confirmar la aelimoinación de la rutina,para evitar eliminaciones accidentales,si el usuario confirma la eliminación,se llama a la función eliminarRutina con el id de la rutina a eliminar
+        )
+    };
+    const eliminarRutina=async(id)=>{
+        try{
+            const eliminarResultado=await EliminarRutina(id);
+            if(eliminarResultado){
+                await cargarDatos();
+                Alert.alert("Éxito","Rutina eliminada correctamente");
+            }
+        }catch(error){
+            console.error("Error al eliminar:",error);
+            Alert.alert("Error","No se pudo eliminar la rutina en el servidor.");
+
+    }
+
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -101,7 +128,7 @@ const MisRutinas = () => {
                                         onPress={() => handleSeleccionarEjercicio(item.id_ejercicio)}
                                     >
                                         <Text style={[styles.ejercicioText, isSelected && {color: '#fff'}]}>
-                                            {item.nombre_ejercicio}
+                                            {item.nombre}
                                         </Text>
                                         <Ionicons 
                                             name={isSelected ? "checkmark-circle" : "add-circle-outline"} 
@@ -140,6 +167,7 @@ const MisRutinas = () => {
                         <Text style={styles.rutinaNombre}>{item.nombre_rutina}</Text>
                         <View style={styles.ejerciciosCount}>
                            <Text style={styles.countText}>Ejercicios seleccionados: {item.ejercicios}</Text>
+                           <Button title="Eliminar" onPress={() => handleEliminarRutina(item.id_rutina)} />
                         </View>
                     </View>
                 )}

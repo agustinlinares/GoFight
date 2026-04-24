@@ -21,9 +21,15 @@ const CrearRutina=async(req,res)=>{
                         nombre_rutina:nombre_rutina,
                         id_usuario:id_usuario,
                         rutinas_ejercicios:{
-                            create:id_ejercicio.map(ej=>
-                            ({duracion_ejercicio:ej.duracion_ejercicio || null,duracion_descanso:ej.duracion_descanso || null,ejercicios:{connect:{id_ejercicio:parseInt(ej.id)}}})
-                            ),
+                            create:id_ejercicio.map((ej)=>{
+                                console.log("Datos recibidos para este ejercicio:", ej); // Agrega este console.log para verificar los datos recibidos para cada ejercicio
+                         const d_ej = (typeof ej === 'object' ? ej.duracion_ejercicio : null) ?? 120;
+    const d_des = (typeof ej === 'object' ? ej.duracion_descanso : null) ?? 180;
+                                const idEjercicio=parseInt(ej.id);
+
+                                return{duracion_ejercicio:parseInt(d_ej),duracion_descanso:parseInt(d_des),ejercicios:{connect:{id_ejercicio:idEjercicio}}}
+
+                            })
                             
                         }
                     },

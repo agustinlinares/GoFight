@@ -44,10 +44,8 @@ const Home=()=>{
                    setIsAdmin(perfil.perfilUsuario?.rol === 'admin');//Si el rol del usuario es admin,entonces le damos acceso al panel de administración
                     console.log('Perfil del usuario:', perfil); // Agrega este console.log para verificar el perfil del usuario
                     
-                    if (actualizacion && actualizacion.gamificaciones) {
-                // Seteamos los datos que vienen directamente de la actualización
-                    setGamificaciones(actualizacion.gamificaciones);
-                
+                const actualizacion = await ActualizarGamificaciones();
+                 if(actualizacion && actualizacion.success){   
                 // Si el server devuelve las calorías, las usamos, si no, llamamos al servicio
                 if (actualizacion.caloriasQuemadas !== undefined) {
                     setCaloriasQuemadas(actualizacion.caloriasQuemadas);
@@ -90,7 +88,9 @@ const Home=()=>{
                      <Header/>
                       <ScrollView>
                           <StackContainer datos={gamificaciones}/>
-                              <BarraProgreso actual={caloriasQuemadas} objetivo={300} unidad="kcal"/>
+                              <BarraProgreso actual={caloriasQuemadas} objetivo={300} unidad="kcal"
+
+                              />
                               {
                                    isAdmin && (
                                         <View style={{marginTop:20,alignItems:'center', flexDirection:'row', justifyContent:'center'}}>

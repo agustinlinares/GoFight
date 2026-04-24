@@ -188,6 +188,16 @@ export const getRutinas=async()=>{
                 dificultad:rutina.dificultad==='F_cil' ? 'Fácil' : rutina.dificultad // Asignamos un valor por defecto si dificultad es null
             }));
         }
+        if(data.rutinas){
+            data.rutinas=data.rutinas.map(rutina=>({
+                ...rutina,
+                 EjerciciosContiempo:rutina.rutinas_ejercicios.map(re=>({
+                    ...re.ejercicios,
+                    duracion_ejercicio:re.duracion_ejercicio || 30,
+                    duracion_descanso:re.duracion_descanso || 30,
+            }))
+        }));
+    }
          return data;
      }catch(error){
          throw error;
@@ -485,6 +495,25 @@ export const getCatalogoEjercicios=async()=>{
             throw new Error(data.message || `Error al obtener el catálogo de ejercicios ${error.message}`);
         }
         return data.ejercicios || [];
+    }catch(error){
+        throw error;
+    }
+}
+
+export const EliminarRutina=async(id_rutina)=>{
+    try{
+        const token=await AsyncStorage.getItem('token');
+        const res=await fetch(`${BASE_URL}/rutinas/eliminar_rutina/${id_rutina}`,{
+            method:'DELETE',
+            headers:{'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
+            }
+        });
+        const text=await res.text();
+        console.log('Respuesta del servidor al eliminar la rutina:',text);
+        const data=JSON.parse(text);
+        if(!res.ok){
+            throw new Error(data.message || `Error al eliminar la rutina ${error.message}`);
+        }
     }catch(error){
         throw error;
     }
