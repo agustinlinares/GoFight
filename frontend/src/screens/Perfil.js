@@ -13,6 +13,7 @@ import { getUserProfile, getGamificaciones } from '../services/services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from '../components/Footer';
 import { Image } from 'react-native';
+import Button from '../components/Button';
 
 const Perfil = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
@@ -89,10 +90,14 @@ const Perfil = ({ navigation }) => {
                     <View style={styles.Divider} />
 
                     <View style={styles.InfoRow}>
-                        <MaterialCommunityIcons name="account-outline" size={20} color="#FF2233" />
-                        <Text style={styles.InfoLabel}>Perfil</Text>
-                      
+                        <Ionicons name="key-outline" size={20} color="#FF2233" />
+                        <Text style={styles.InfoLabel}>Contraseña</Text>
+                        <Text style={styles.InfoValue}>********</Text>
+                        <View>
+                          
+                        </View>
                     </View>
+                    
                 </View>
 
                 {/* Stats */}

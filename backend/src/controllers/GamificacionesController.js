@@ -60,15 +60,26 @@ const ActualizarGamificaciones = async (req, res) => {
             if (fechaUltima.getTime() === hoy.getTime()) {
                 // Ya entrenó hoy: mantenemos racha pero actualizamos mensaje
                 mensajeResponse = 'Dale duro, que seguro que superas a mi abuela.';
+                 if (gamificaciones.racha_dias === 0) {
+    // Primera sesión del día — activar racha
+    racha_dias = 1;
+    puntos_ranking += 10;
+    mensajeResponse = '¡Primera sesión del día! Racha activada.';
+  } else {
+    // Ya tiene racha activa — mantener
+    mensajeResponse = 'Dale duro, que seguro que superas a mi abuela.';
+  }
             } else if (fechaUltima.getTime() === ayer.getTime()) {
                 //Si ayer sí que entreno y además su sesión está registrada dentro de ese intervalo de 24 horas,pues aumentaremos la gamificaciones,ya sean puntos ranking e incluso esto influye en el mensaje
                 racha_dias += 1;
                 puntos_ranking += 10;
                 mensajeResponse = `¡Crack! Has mantenido tu racha de ${racha_dias} días.`;
+                console.log('Racha mantenida. Última sesión registrada ayer.');
             } else {
                 // Si han pasado más de 2 días sin entrenar,se pierde esta racha,es decir,si no se registra ninguna sesión dentro de un rango establecido de 48 horas,entonces se pierde la racha,y además afecta a los puntos del ranking
                 puntos_ranking = Math.max(0, puntos_ranking - 10);
                 mensajeResponse = 'Has perdido tu racha por vago/a. Mi abuela pega más fuerte.';
+                console.log('Racha perdida. Última sesión registrada hace más de 2 días.');
             }
         }
 
@@ -76,11 +87,13 @@ const ActualizarGamificaciones = async (req, res) => {
         if (totalCaloriasQuemadas >= 300) {
             puntos_ranking += 20;
             mensajeResponse += ` | +20 pts por quemar ${totalCaloriasQuemadas} kcal.`;
+            console.log('Bonificación por calorías quemadas aplicada. Total calorías quemadas hoy:', totalCaloriasQuemadas);
         }
 
         if (sesionesHoy.length >= 3) {
             puntos_ranking += 20;
             mensajeResponse += ` | +20 pts por completar 3 sesiones.`;
+            console.log('Bonificación por sesiones registradas aplicada. Total sesiones registradas hoy:', sesionesHoy.length);
         }
 
         // Finalmente,actualizaremos las gamificaciones del usuario con los nuevos valores calculados,teniendo en cuenta la racha de días y los puntos del ranking,que se actualizan dependiendo de las sesiones registradas dentro de un rango establecido de 24 horas,así como la ultima sesión registrada dentro de ese mismo rango establecido de 24 horas
