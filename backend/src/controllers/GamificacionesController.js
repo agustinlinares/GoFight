@@ -77,7 +77,8 @@ const ActualizarGamificaciones = async (req, res) => {
                 console.log('Racha mantenida. Última sesión registrada ayer.');
             } else {
                 // Si han pasado más de 2 días sin entrenar,se pierde esta racha,es decir,si no se registra ninguna sesión dentro de un rango establecido de 48 horas,entonces se pierde la racha,y además afecta a los puntos del ranking
-                puntos_ranking = Math.max(0, puntos_ranking - 10);
+                puntos_ranking = Math.max(0, puntos_ranking - 20); // Penalización por perder racha,pero no puede bajar de 0
+                racha_dias = 0;
                 mensajeResponse = 'Has perdido tu racha por vago/a. Mi abuela pega más fuerte.';
                 console.log('Racha perdida. Última sesión registrada hace más de 2 días.');
             }

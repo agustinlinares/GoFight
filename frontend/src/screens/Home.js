@@ -47,6 +47,7 @@ const Home=()=>{
             if (perfil) {
                 setIsAdmin(perfil.perfilUsuario?.rol === 'admin');
             }
+           
 
             // 2. Traemos los datos de lectura (Práctico y seguro)
             // Usamos Promise.all para que las dos peticiones se hagan a la vez y sea más rápido
@@ -70,6 +71,7 @@ const Home=()=>{
 
     InicializarHome();
 }, []);
+
      if(loading){
          return(
                <View style={style.ActivityIndicatorStyle}>
@@ -101,6 +103,7 @@ const Home=()=>{
           )
      }
 }
+
 const style=StyleSheet.create({
      ActivityIndicatorStyle:{
           flex:1,
