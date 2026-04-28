@@ -518,6 +518,31 @@ export const EliminarRutina=async(id_rutina)=>{
         throw error;
     }
 }
+//Vamos a implementar un servicio para actualizar el perfil del usuario
+export const actualizarPerfil=async(NuevoNombre,NuevoEmail,NuevaContraseña)=>{
+    try{
+        const token=await AsyncStorage.getItem('token');
+     
+        const res=await fetch(`${BASE_URL}/auth/actualizar_perfil`,{
+            method:'PUT',
+            headers:{'Content-Type':'application/json',
+            'Authorization':`Bearer ${token}`//Pasamos el token de autenticación en los headers,para poder acceder a las rutas protegidas de la API
+            },
+            body:JSON.stringify({name:NuevoNombre,email:NuevoEmail,password:NuevaContraseña})//Pasamos la nueva contraseña a json para poder enviarla bien a la base de datos
+            //No recibimos la contraseña por tema de seguridad y privacidad del usuario
+        });
+        
+        const text=await res.text();
+        console.log('Respuesta del servidor al actualizar el perfil:',text);
+        const data=JSON.parse(text);
+        if(!res.ok){
+            throw new Error(data.message || `Error al actualizar el perfil ${error.message}`);
+        }
+        return data;
+    }catch(error){
+        throw error;
+    }
+}
 //------Crear rutinas-----//
 //-----Este ya es el ultimo servicio que vamos a crear y está enfocado en la creación de rutinas por parte del usuario/administrador,ya que el administrador puede crear rutinas para que los usuarios puedan elegirlas,por lo tanto,es importante que esta función esté protegida por el middleware de autenticación y autorización,para que solo el admin pueda acceder a ella
 export const crearRutina = async (nombre_rutina, ejerciciosIds) => {

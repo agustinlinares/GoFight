@@ -9,15 +9,20 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
-import { getUserProfile, getGamificaciones } from '../services/services';
+import { getUserProfile, getGamificaciones,actualizarPerfil} from '../services/services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from '../components/Footer';
 import { Image } from 'react-native';
 import Button from '../components/Button';
-
+import { Modal } from 'react-native';
+import TextInput from '../components/TextInput';
 const Perfil = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [perfil, setPerfil] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [newPassword, setNewPassword] = useState('');//Vamos a actualizar la contraseña del usuario,en caso de que quiera cambiarlo
+    const [newNombre, setNewNombre] = useState('');//Vamos a actualizar el nombre del usuario,en caso de que quiera cambiarlo
+    const [newEmail, setNewEmail] = useState('');//Vamos a actualizar el email del usuario,en caso de que quiera cambiarlo
     const [gamificaciones, setGamificaciones] = useState(null);
 
     useEffect(() => {
@@ -42,7 +47,35 @@ const Perfil = ({ navigation }) => {
         await AsyncStorage.removeItem('token');
         navigation.replace('login');
     };
+  const handleChangeProfile=async()=>{
+            const nombreActual=perfil?.perfilUsuario?.nombre || '';
+             const emailActual=perfil?.perfilUsuario?.email || '';
 
+             const nombreFinal=newNombre.trim()!== '' ? newNombre : nombreActual;
+             const emailFinal=newEmail.trim()!== '' ? newEmail : emailActual;
+          //No traemos la contraseña actual por motivos de seguridad y porque el usuario cualquier usuario no debería tener acceso a la contraseña actual,ya que es un dato sensible,por lo tanto,si el usuario quiere actualizar su contraseña,puede ingresar una nueva contraseña,pero no puede ver la contraseña actual,lo cual es una ventaja de seguridad
+      try {
+           await actualizarPerfil(
+            nombreFinal,
+            emailFinal,
+            newPassword.trim()!== '' ? newPassword : undefined
+           )
+           alert('Perfil actualizado exitosamente');
+          console.log('Datos a actualizar:', { nombreFinal, emailFinal, newPassword });
+          //El usuario puede actualizar su nombre,email y contraseña,si no quiere actualizar alguno de esos campos,puede dejarlo vacío y se mantendrá el valor actual,ya que en el servicio de actualizarPerfil,si el campo está vacío,se mantiene el valor actual,lo cual es una ventaja para el usuario,ya que no tiene que llenar todos los campos si solo quiere actualizar uno o dos campos
+
+          // Aquí podrías mostrar un mensaje de éxito al usuario
+      } catch (error) {
+          console.error('Error al actualizar el perfil:', error);
+          //En caso de error, podrías mostrar un mensaje de error al usuario
+          // Aquí podrías mostrar un mensaje de error al usuario
+      } finally {
+          setModalVisible(false);
+          setNewNombre('');
+          setNewEmail('');
+          setNewPassword('');
+      }
+  }
     if (loading) {
         return (
             <View style={styles.LoadingContainer}>
@@ -59,6 +92,39 @@ const Perfil = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.Container}>
+        <Modal visible={modalVisible} animationType="slide" transparent={true}>
+            <View style={styles.ModalContainer}>
+                <View style={styles.ModalContent}>
+                    <Text style={styles.ModalTitle}>Actualizar perfil</Text>
+                    <TextInput
+                        style={styles.ModalInput}
+                        placeholder="Nuevo nombre"
+                        value={newNombre}
+                        onChangeText={setNewNombre}
+                         iconName="person-outline"
+                        
+                    />
+                    <TextInput
+                        style={styles.ModalInput}
+                        placeholder="Nuevo email"
+                        value={newEmail}
+                        onChangeText={setNewEmail}
+                         iconName="address-card-outline"
+                       
+                    />
+                    <TextInput
+                        style={styles.ModalInput}
+                        placeholder="Nueva contraseña"
+                        secureTextEntry
+                        value={newPassword}
+                        onChangeText={setNewPassword}
+                        iconName="lock-outline"
+                    />
+                    <Button title="Guardar" onPress={handleChangeProfile} />
+                    <Button title="Cancelar" onPress={() => setModalVisible(false)} />
+                </View>
+            </View>
+        </Modal>
             <ScrollView contentContainerStyle={styles.ScrollContent} showsVerticalScrollIndicator={false}>
 
                 {/* Header de perfil */}
@@ -93,11 +159,12 @@ const Perfil = ({ navigation }) => {
                         <Ionicons name="key-outline" size={20} color="#FF2233" />
                         <Text style={styles.InfoLabel}>Contraseña</Text>
                         <Text style={styles.InfoValue}>********</Text>
-                        <View>
-                          
-                        </View>
+                       
                     </View>
-                    
+                      <View>
+                          <Button title="Actualizar perfil" onPress={() => setModalVisible(true)} />
+                           
+                        </View>
                 </View>
 
                 {/* Stats */}
@@ -134,6 +201,48 @@ const Perfil = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    ModalContainer:{
+       backfaceVisibility:'hidden',
+        justifyContent:'center',
+       alignItems:'center',
+       bottom:0,
+       top:0,
+       left:0,
+         right:0,
+        backgroundColor:'rgba(0,0,0,0.5)',
+        position:'absolute',
+        zIndex:10,
+        
+       
+
+    },
+    ModalContent:{
+        width:'80%',
+        backgroundColor:'#0F0F0F',
+        padding:20,
+        borderRadius:10,
+        borderWidth:1,
+        borderColor:'rgba(255,34,51,0.2)',
+        shadowColor:'#FF2233',
+        shadowOffset:{width:0,height:4},
+        shadowOpacity:0.3,
+        shadowRadius:15,
+        elevation:8,
+        gap:15,
+    },
+    ModalTitle:{
+        fontSize:18,
+        fontWeight:'700',
+        color:'#ffffff',
+        textShadowColor:'rgba(255,34,51,0.5)',
+        textShadowOffset:{width:0,height:2},
+        textShadowRadius:10,
+        fontFamily:'Helvetica',
+        letterSpacing:1,
+        textTransform:'uppercase',
+        marginBottom:15,
+    },
+    
     LoadingContainer: {
         flex: 1,
         justifyContent: 'center',

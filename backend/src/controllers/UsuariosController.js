@@ -7,8 +7,15 @@ const ActualizarUsuario=async(req,res)=>{
     try{
         const id=req.user.id
         const {name,email,password}=req.body;//Recibimos los datos que queremos actualizar desde el cliente
-        if(!name || !email || !password){
-            return res.status(400).json({message:'Todos los campos son obligatorios'});
+       
+        if(!name){
+            return res.status(400).json({message:'El nombre es obligatorio'});
+        }
+        else if(!email){
+            return res.status(400).json({message:'El email es obligatorio'});
+        }
+        else if(!password){
+            return res.status(400).json({message:'La contraseña es obligatoria'});
         }
         const UsuarioExistente=await prisma.usuarios.findUnique({
             where:{id_usuario:id}
