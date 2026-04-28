@@ -47,7 +47,7 @@ const Home=()=>{
             if (perfil) {
                 setIsAdmin(perfil.perfilUsuario?.rol === 'admin');
             }
-           
+          
 
             // 2. Traemos los datos de lectura (Práctico y seguro)
             // Usamos Promise.all para que las dos peticiones se hagan a la vez y sea más rápido

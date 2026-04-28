@@ -109,7 +109,7 @@ const Perfil = ({ navigation }) => {
                         placeholder="Nuevo email"
                         value={newEmail}
                         onChangeText={setNewEmail}
-                         iconName="address-card-outline"
+                        iconName="mail-outline"
                        
                     />
                     <TextInput
@@ -118,7 +118,7 @@ const Perfil = ({ navigation }) => {
                         secureTextEntry
                         value={newPassword}
                         onChangeText={setNewPassword}
-                        iconName="lock-outline"
+                        iconName="lock-closed-outline"
                     />
                     <Button title="Guardar" onPress={handleChangeProfile} />
                     <Button title="Cancelar" onPress={() => setModalVisible(false)} />
