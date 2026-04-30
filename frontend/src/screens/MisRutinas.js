@@ -165,8 +165,27 @@ const MisRutinas = () => {
                 renderItem={({ item }) => (
                     <View style={styles.rutinaContainer}>
                         <Text style={styles.rutinaNombre}>{item.nombre_rutina}</Text>
-                        <View style={styles.ejerciciosCount}>
-                           <Text style={styles.countText}>Ejercicios seleccionados: {item.ejercicios}</Text>
+                        <View style={styles.ejerciciosDificultadView}>
+                            <Text style={[
+                                {
+
+                                    borderColor: item.dificultad === 'Fácil' ? '#4caf50' : item.dificultad === 'Intermedio' ? '#ff9800' : '#f44336',
+                                    borderWidth: 1,
+                                    padding: 4,
+                                    borderRadius: 4,
+                                    color: item.dificultad === 'Fácil' ? '#4caf50' : item.dificultad === 'Intermedio' ? '#ff9800' : '#f44336',
+                                    fontSize: 12,
+                                    width: 80,
+                                    textAlign: 'center',
+                                    boxShadow: `0 0 8px ${item.dificultad === 'Fácil' ? 'rgba(76, 175, 80, 0.5)' : item.dificultad === 'Intermedio' ? 'rgba(255, 152, 0, 0.5)' : 'rgba(244, 67, 54, 0.5)'}`,
+                                    bottom: 4,
+                                    alignSelf: 'flex-start',
+                                    fontWeight: '600',
+                                }
+                              
+
+                                
+                            ]}>{item.dificultad}</Text>
                            <Button title="Eliminar" onPress={() => handleEliminarRutina(item.id_rutina)} />
                         </View>
                     </View>
@@ -185,51 +204,72 @@ const styles = StyleSheet.create({
         backgroundColor: '#060606'
 
     },
-    title: { fontSize: 26, 
-        fontWeight: '900', marginBottom: 25,
-         color: '#d30a0a',
-          textAlign: 'center',
-           letterSpacing: 2 
+    title: {   
+        fontSize: 28, 
+        fontWeight: '800', 
+        marginBottom: 24,
+        color: '#ff3333',
+        textAlign: 'center',
+        letterSpacing: 3,
+        textShadowColor: 'rgba(255, 51, 51, 0.3)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 8
         },
-    modalOverlay: { flex: 1,
-         backgroundColor: 'rgba(0,0,0,0.9)',
-          justifyContent: 'center',
-           alignItems: 'center'
+    modalOverlay: {    flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.85)',
+        justifyContent: 'center',
+        alignItems: 'center'
          },
-    modalContent: { width: '90%',
-         backgroundColor: '#161616',
-          borderRadius: 20,
-           padding: 25, 
-           borderWidth: 1,
-            borderColor: '#333'
+    modalContent: {   width: '90%',
+        maxHeight: '85%',
+        backgroundColor: '#141414',
+        borderRadius: 24,
+        padding: 24, 
+        borderWidth: 1,
+        borderColor: 'rgba(255, 51, 51, 0.15)',
+        shadowColor: '#ff3333',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.1,
+        shadowRadius: 20,
+        elevation: 10
          },
-    modalTitle: { fontSize: 22, 
-        fontWeight: 'bold', color: '#fff',
-         marginBottom: 20, textAlign: 'center' 
+    modalTitle: {  fontSize: 24, 
+        fontWeight: '700', 
+        color: '#fff',
+        marginBottom: 24, 
+        textAlign: 'center',
+        letterSpacing: 1
         },
-    input: { backgroundColor: '#222',
-         color: '#fff',
-         padding: 15, 
-         borderRadius: 10,
-          marginBottom: 20, 
-          fontSize: 16 
+    input: { backgroundColor: '#1a1a1a',
+        color: '#fff',
+        padding: 16, 
+        borderRadius: 12,
+        marginBottom: 20, 
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: '#2a2a2a',
+        fontWeight: '500'
 
         },
-    label: { color: '#888',
-         fontSize: 14, 
-         fontWeight: 'bold',
-          marginBottom: 10, 
-          textTransform: 'uppercase'
+    label: {color: '#888',
+        fontSize: 13, 
+        fontWeight: '700',
+        marginBottom: 12, 
+        textTransform: 'uppercase',
+        letterSpacing: 1.5
          },
-    flatList: { maxHeight: 300,
-         marginBottom: 20 
+    flatList: {  maxHeight: 320,
+        marginBottom: 20 
         },
-    ejercicioItem: { flexDirection: 'row',
-         justifyContent: 'space-between',
-          padding: 15, backgroundColor: '#222',
-           borderRadius: 10, 
-           marginBottom: 8,
-            alignItems: 'center' },
+    ejercicioItem: {   flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 16, 
+        backgroundColor: '#1a1a1a',
+        borderRadius: 12, 
+        marginBottom: 8,
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#252525' },
 
     ejercicioSelected: { backgroundColor: '#d30a0a'
 
@@ -272,8 +312,8 @@ const styles = StyleSheet.create({
          fontWeight: 'bold',
           marginBottom: 4 
         },
-    ejerciciosCount: { marginTop: 4 },
-    countText: { color: '#555',
+    ejerciciosDificultadView: { marginTop: 4 },
+    countText: { color: '#353131',
          fontSize: 12, fontWeight: '600'
          },
     MessageContainer: { padding: 40,
@@ -282,7 +322,9 @@ const styles = StyleSheet.create({
     noRutinas: { fontSize: 16, 
         color: '#444',
 
-         fontWeight: 'bold' }
+         fontWeight: 'bold' },
+
+         
 });
 
 export default MisRutinas;

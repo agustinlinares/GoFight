@@ -34,7 +34,7 @@ const Ranking=()=>{
     }
     return (
        <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Ranking de jugadores</Text>
+        <Text style={styles.title}>Ranking de luchadores</Text>
         <TextInputComponent placeholder="Buscar jugador..." style={{marginBottom: 20}} value={searchUser} onChangeText={setSearchUser} />
         <ScrollView>
             {UsuarioFiltrado.map((jugador,index)=>(
@@ -72,16 +72,15 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        color: '#f7f2f2',
-        letterSpacing: 1,
-        fontFamily: 'helvetica',
+        fontSize: 28, 
+        fontWeight: '800', 
+        marginBottom: 24,
+        color: '#ff3333',
         textAlign: 'center',
-        paddingBottom: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#484141',
+        letterSpacing: 3,
+        textShadowColor: 'rgba(255, 51, 51, 0.3)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 8
 
 
     },
