@@ -41,9 +41,9 @@ const Ranking=()=>{
                 <View key={index} style={
                     [
                         styles.jugadorContainer,
-                        index === 0 ? {backgroundColor: '#ffd700'} : {}, 
-                        index === 1 ? {backgroundColor: '#c0c0c0'} : {}, 
-                        index === 2 ? {backgroundColor: '#cd7f32'} : {}, 
+                        index === 0 ? {backgroundColor: '#ecc112', shadowColor: '#ecc112', shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.8, shadowRadius: 12, elevation: 6 ,borderColor: '#ecc112',borderWidth: 2} : {}, 
+                        index === 1 ? {backgroundColor: '#c0c0c0', shadowColor: '#a9a9a9', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.8, shadowRadius: 4, elevation: 6, borderColor: '#a9a9a9',borderWidth: 2} : {}, 
+                        index === 2 ? {backgroundColor: '#cd7f32', shadowColor: '#8b4513', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.8, shadowRadius: 4, elevation: 6, borderColor: '#8b4513',borderWidth: 2} : {}, 
                     ]
                 }>
                     <Text style={styles.jugadorNombre}>{jugador.usuarios.nombre}</Text>
@@ -85,35 +85,33 @@ const styles = StyleSheet.create({
 
     },
     jugadorContainer: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginBottom: 10,
-  padding: 14,
-  borderRadius: 12,
-  backgroundColor: '#1a1a1a',
-  borderLeftWidth: 4,
-  borderLeftColor: '#e72b2b',
-  shadowColor: '#e72b2b',
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.3,
-  shadowRadius: 8,
-  elevation: 6,
+   flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+        padding: 16,
+        borderRadius: 16,
+        backgroundColor: '#121212',
+        borderLeftWidth: 4,
+        borderLeftColor: '#d30a0a',
+        shadowColor: '#d30a0a',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+        elevation: 6,
 
     },
     jugadorNombre: {
-        fontSize: 18,
-        color: '#ffffff',
-        letterSpacing: 1,
-        fontWeight: 'bold',
-        fontFamily: 'helvetica',
+          fontSize: 16,
+        color: '#e0e0e0',
+        letterSpacing: 0.5,
+        fontWeight: '700',
     },
     jugadorPuntos: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#ffffff',
-        letterSpacing: 1,
-        fontFamily: 'helvetica',
+        fontSize: 16,
+        fontWeight: '700',
+        color: '#e0e0e0',
+        letterSpacing: 0.5,
     },
 
 });
